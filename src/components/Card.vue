@@ -361,16 +361,18 @@
       </b-dropdown>
     </div>
     <div class="card-embeds">
-      <Embed
+      <embed
         v-for="(embed, index) in embedList"
-        :key="'embed' + index"
-        :url="embed.url"
+        :key="index"
+        :src="embed.url"
+        width="100%"
+        height="600"
+        frameborder="0"
+        allowfullscreen
       />
-      <img
-        v-for="(image, index) in imgList"
-        :key="'image' + index"
-        :src="image.url"
-      />
+    </div>
+    <div class="card-images">
+      <img v-for="(image, index) in imgList" :key="index" :src="image.url" />
     </div>
   </div>
 </template>
@@ -379,12 +381,9 @@
 import { Component, Prop, Vue, Ref } from "vue-property-decorator";
 import * as linkify from "linkifyjs";
 // import linkifyElement from "linkifyjs/element";
-import Embed from "@/components/Embed.vue";
 
 @Component({
-  components: {
-    Embed
-  }
+  components: {}
 })
 export default class Card extends Vue {
   @Prop() private todo!: {
@@ -540,7 +539,8 @@ input[type="checkbox"]:checked + .strikethrough:not([data-value=""]) {
   text-decoration: line-through;
   opacity: 0.375;
 }
-.card-embeds {
+.card-embeds,
+.card-images {
   text-align: center;
 }
 img {
