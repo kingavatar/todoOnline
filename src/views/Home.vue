@@ -5,7 +5,7 @@
     <b-card class="w-100 todo-card shadow" style="margin-top: 100px;">
       <b-card-title class="row">
         <div class="flex-fill todo-card-title" contenteditable="true">
-          {{ getDemoTodoCard.title }}
+          {{ title }}
         </div>
         <b-button
           variant="link"
@@ -75,7 +75,7 @@
       <draggable handle=".drag-handle" v-bind="dragOptions">
         <!-- <b-card-text>Header and footers using props.</b-card-text> -->
         <Card
-          v-for="(todo, index) in getDemoTodoCard.todoList"
+          v-for="(todo, index) in todoList"
           :key="index"
           :todo="todo"
           :cardIdx="index"
@@ -109,9 +109,20 @@ export default {
   },
   data: function() {
     return {
-      title: "Hey there 👋",
-      todoList: []
+      title: "New Title",
+      todoList: [
+        {
+          text: "",
+          checked: false,
+          priority: 0,
+          imgList: []
+        }
+      ]
     };
+  },
+  mounted() {
+    this.title = (" " + this.getDemoTodoCard.title).slice(1);
+    this.todoList = [...this.getDemoTodoCard.todoList];
   },
   methods: {
     addCard() {

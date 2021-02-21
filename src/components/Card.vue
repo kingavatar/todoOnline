@@ -413,7 +413,7 @@ export default class Card extends Vue {
   mounted() {
     this.todo.imgList.forEach(ele => {
       const urlCreator = window.URL || window.webkitURL;
-      console.log(ele);
+      // console.log(ele);
       const eleBlob: Blob = this.dataURItoBlob(ele);
       const imageUrl = urlCreator.createObjectURL(eleBlob);
       this.imgList.push({ url: imageUrl });
@@ -438,7 +438,7 @@ export default class Card extends Vue {
       const base64ImageLoad = () => {
         if (reader.result != null) {
           imgBase64 = reader.result;
-          console.log(imgBase64);
+          // console.log(imgBase64);
           // this.imgList.push({ url: imgBase64 });
           this.todo.imgList.push(imgBase64);
         }
