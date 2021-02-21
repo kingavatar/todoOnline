@@ -44,13 +44,15 @@
         ref="todoInput"
         spellcheck="true"
         v-bind:class="classTextPriority"
+        v-on:keydown.enter.prevent
         v-on:keyup.enter="$emit('addCard')"
         v-on:keyup.46="$emit('removeCard')"
         @paste="onPaste"
         class="strikethrough box-text flex-fill"
         placeholder="Enter todo list text"
         :data-value="linkifiedText"
-        @input="event => (todo.text = event.target.innerHTML)"
+        v-text="todo.text"
+        @blur="event => (todo.text = event.target.innerHTML)"
       ></div>
       <!-- </b-form-input> -->
       <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
@@ -414,7 +416,6 @@ export default class Card extends Vue {
     }
   }
   mounted() {
-    this.todoInput.innerText = this.todo.text;
     this.todo.imgList.forEach(ele => {
       const urlCreator = window.URL || window.webkitURL;
       // console.log(ele);
