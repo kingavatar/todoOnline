@@ -542,6 +542,7 @@ export default class Card extends Vue {
 
 ::v-deep .dropdown-toggle {
   padding-top: 3px;
+  max-height: 24px;
 }
 
 .box-text {

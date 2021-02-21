@@ -110,14 +110,7 @@ export default {
   data: function() {
     return {
       title: "New Title",
-      todoList: [
-        {
-          text: "",
-          checked: false,
-          priority: 0,
-          imgList: []
-        }
-      ]
+      todoList: []
     };
   },
   mounted() {
