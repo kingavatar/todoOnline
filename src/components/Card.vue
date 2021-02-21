@@ -52,7 +52,7 @@
         placeholder="Enter todo list text"
         :data-value="linkifiedText"
         v-text="todo.text"
-        @blur="event => (todo.text = event.target.innerHTML)"
+        @blur="updateTodoText"
       ></div>
       <!-- </b-form-input> -->
       <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
@@ -392,13 +392,12 @@ import * as linkify from "linkifyjs";
 })
 export default class Card extends Vue {
   @Prop() private todo!: {
+    id: string;
     text: string;
     checked: boolean;
     priority: number;
     imgList: Array<string | ArrayBuffer>;
   };
-  @Prop() private cardIdx!: number;
-  @Prop() private afocus!: boolean;
   @Ref() todoInput!: HTMLInputElement;
   private embedList: Array<{ url: string }> = [];
   private imgList: Array<{ url: string | ArrayBuffer }> = [];
@@ -414,6 +413,13 @@ export default class Card extends Vue {
       default:
         break;
     }
+  }
+  updateTodoText(event: Event) {
+    this.todo.text = (event.target as HTMLDivElement).innerText.replace(
+      /\n/g,
+      ""
+    );
+    (event.target as HTMLDivElement).innerText = this.todo.text;
   }
   mounted() {
     this.todo.imgList.forEach(ele => {
@@ -551,6 +557,7 @@ export default class Card extends Vue {
   width: 80%;
   vertical-align: middle;
   border: 0;
+  border-radius: 2.5px;
   white-space: pre-wrap;
   word-break: break-word;
   padding: 3px 2px;

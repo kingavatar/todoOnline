@@ -8,10 +8,11 @@ const store: StoreOptions<RootState> = {
   state: {
     todos: [
       {
-        id: 0,
+        id: "fb658d57-4653-4876-89b3-80ff9f60e3d6",
         title: "Hey there 👋",
         todoList: [
           {
+            id: "76805351-0a16-48db-b2fb-cfd93aafb6f9",
             text:
               "Todo Online is an awesome free online to-do list app that helps you to create a to-do list with some extra features.",
             checked: false,
@@ -19,12 +20,14 @@ const store: StoreOptions<RootState> = {
             imgList: []
           },
           {
+            id: "0cc0bc65-7bf1-43ef-a374-8fb59f5ad70a",
             text: "Some Cool Features 💫 listed below",
             checked: false,
             priority: 0,
             imgList: []
           },
           {
+            id: "a76a6bed-e1f3-400c-85c1-0483d37c7b18",
             text:
               "You can sort the todo list by dragging the Card using the handle at left of card.",
             checked: false,
@@ -35,6 +38,7 @@ const store: StoreOptions<RootState> = {
           },
 
           {
+            id: "927796a1-6f41-41e1-8902-9a4baaaac24c",
             text:
               "You can set card Priorities by selecting it from the menu on the right side of the card",
             checked: true,
@@ -42,30 +46,35 @@ const store: StoreOptions<RootState> = {
             imgList: []
           },
           {
+            id: "2e11b173-f1ed-4c46-a1ec-f9d7dba713e5",
             text: "High Priority Card",
             checked: true,
             priority: 1,
             imgList: []
           },
           {
+            id: "4f187b22-3dce-4500-ae16-b187e5749003",
             text: "Medium Priority Card",
             checked: false,
             priority: 2,
             imgList: []
           },
           {
+            id: "9edea000-57a7-42f0-a4e7-812223ff28f1",
             text: "Normal Priority Card",
             checked: true,
             priority: 3,
             imgList: []
           },
           {
+            id: "c3da25f1-0985-4bd3-9744-83124f4eb2eb",
             text: "Low Priority Card",
             checked: false,
             priority: 4,
             imgList: []
           },
           {
+            id: "14d91ce4-afa1-4a24-ae91-55f9f8ffbdd9",
             text:
               "You can embed images by simply pasting the image using Ctrl+v or Cmd+v",
             checked: false,
@@ -73,6 +82,7 @@ const store: StoreOptions<RootState> = {
             imgList: []
           },
           {
+            id: "81d016a2-be01-457a-bed5-54959bec8fd9",
             text:
               "Can embed youtube videos in text https://www.youtube.com/watch?v=ScMzIvxBSi4 Place a video link in text with spaces",
             checked: true,
@@ -80,6 +90,7 @@ const store: StoreOptions<RootState> = {
             imgList: []
           },
           {
+            id: "08b6c69e-ed4d-41a5-979b-903d6723d3b9",
             text:
               'You can add a new card by using ➕ button or Pressing "Enter" Key',
             checked: true,
@@ -87,6 +98,7 @@ const store: StoreOptions<RootState> = {
             imgList: []
           },
           {
+            id: "e4edca36-9814-49dc-a791-f772aa1dda58",
             text:
               'You can delete a card by using delete option in menu or Pressing "Delete" Key',
             checked: false,
@@ -96,6 +108,7 @@ const store: StoreOptions<RootState> = {
             ]
           },
           {
+            id: "fe298e13-8cae-4290-b639-2dac9dbd389f",
             text: "You can copy a card by using Copy option in menu",
             checked: true,
             priority: 0,
@@ -111,7 +124,7 @@ const store: StoreOptions<RootState> = {
     addTodoCard(state, todoCard: TodoCard) {
       state.todos.push(todoCard);
     },
-    deleteTodoCard(state, id: number) {
+    deleteTodoCard(state, id: string) {
       const search = state.todos.filter(i => i.id !== id);
       state.todos = search;
     }
@@ -120,7 +133,7 @@ const store: StoreOptions<RootState> = {
     updateTodos(contex, todoCard: TodoCard) {
       contex.commit("addTodoCard", todoCard);
     },
-    deleteTodos(contex, id: number) {
+    deleteTodos(contex, id: string) {
       contex.commit("deleteTodoCard", id);
     }
   },
@@ -128,14 +141,24 @@ const store: StoreOptions<RootState> = {
     getTodoCards(state): TodoCards {
       return state.todos;
     },
-    getDemoTodoCard(state): TodoCard {
-      return state.todos[0];
+    getDemoTodoCard(state): TodoCard | undefined {
+      return state.todos.find(
+        i => i.id === "fb658d57-4653-4876-89b3-80ff9f60e3d6"
+      );
     },
-    totalTasks(state, idx: number): number {
-      return state.todos[idx].todoList.length;
+    totalTasks(state, id: string): number {
+      const todoCard = state.todos.find(i => i.id === id);
+      if (todoCard !== undefined) {
+        return todoCard.todoList.length;
+      }
+      return -1;
     },
-    getTodos(state, idx): Todos {
-      return state.todos[idx].todoList;
+    getTodos(state, id): Todos | undefined {
+      const todoCard = state.todos.find(i => i.id === id);
+      if (todoCard !== undefined) {
+        return todoCard.todoList;
+      }
+      return undefined;
     },
     totalDoneTasks: (state, getters) => {
       return getters.getTodos.filter((i: Todo) => i.checked === true).length;

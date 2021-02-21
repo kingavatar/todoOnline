@@ -1,9 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
 export class Todo {
+  id: string;
   text: string;
   checked: boolean;
   priority: 0 | 1 | 2 | 3 | 4;
   imgList: Array<string | ArrayBuffer>;
   constructor() {
+    this.id = uuidv4();
     this.text = "";
     this.checked = false;
     this.priority = 0;
@@ -14,11 +17,11 @@ export class Todo {
 export type Todos = Todo[];
 
 export class TodoCard {
-  id: number;
+  id: string;
   title: string;
   todoList: Todos;
   constructor() {
-    this.id = 0;
+    this.id = uuidv4();
     this.title = "New Title";
     this.todoList = [];
   }

@@ -76,9 +76,8 @@
         <!-- <b-card-text>Header and footers using props.</b-card-text> -->
         <Card
           v-for="(todo, index) in todoList"
-          :key="index"
+          :key="todo.id"
           :todo="todo"
-          :cardIdx="index"
           @removeCard="removeCard(index)"
           @copyCard="copyCard(index)"
           @addCard="addCardIndex(index)"
@@ -98,7 +97,8 @@
 import Card from "@/components/Card.vue";
 import draggable from "vuedraggable";
 import { mapGetters } from "vuex";
-// import { uuid } from "vue-uuid";
+// import { v4 as uuidv4 } from "uuid";
+import { Todo } from "@/types";
 
 export default {
   name: "Home",
@@ -109,7 +109,7 @@ export default {
   },
   data: function() {
     return {
-      title: "New Title",
+      title: "Hey there 👋",
       todoList: []
     };
   },
@@ -119,12 +119,7 @@ export default {
   },
   methods: {
     addCard() {
-      this.todoList.push({
-        text: "",
-        checked: false,
-        priority: 0,
-        imgList: []
-      });
+      this.todoList.push(new Todo());
       this.$nextTick(() => {
         this.$refs.cards[this.todoList.length - 1].todoInput.focus();
       });
@@ -133,21 +128,18 @@ export default {
       this.$delete(this.todoList, index);
     },
     copyCard(index) {
-      this.todoList.splice(
-        index + 1,
-        0,
-        JSON.parse(JSON.stringify(this.todoList[index]))
-      );
+      const newCard = new Todo();
+      const copyCard = JSON.parse(JSON.stringify(this.todoList[index]));
+      newCard.text = copyCard.text;
+      newCard.checked = copyCard.checked;
+      newCard.priority = copyCard.priority;
+      newCard.imgList = copyCard.imgList;
+      this.todoList.splice(index + 1, 0, newCard);
     },
     addCardIndex(index) {
-      this.todoList.splice(index + 1, 0, {
-        text: "",
-        checked: false,
-        priority: 0,
-        imgList: []
-      });
+      this.todoList.splice(index + 1, 0, new Todo());
       this.$nextTick(() => {
-        this.$refs.cards[index + 1].todoInput.focus();
+        this.$refs.cards[this.todoList.length - 1].todoInput.focus();
       });
     },
     checkAll() {
