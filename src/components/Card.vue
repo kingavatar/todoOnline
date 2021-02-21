@@ -23,7 +23,6 @@
         v-bind:class="classCheckboxPriority"
         class="box-fix"
         v-model="todo.checked"
-        style="margin-top:6px;"
         :disabled="todo.text == '' ? (todo.checked = false) || true : false"
       />
       <!-- value="1" -->
@@ -39,17 +38,21 @@
       class="strikethrough box-text flex-fill"
       placeholder="Enter todolist text"
     > {{todoText}}</b-card-text> -->
-      <b-form-input
+      <!-- v-model="todo.text" -->
+      <div
+        contenteditable="true"
         ref="todoInput"
+        spellcheck="true"
         v-bind:class="classTextPriority"
-        v-model="todo.text"
         v-on:keyup.enter="$emit('addCard')"
         v-on:keyup.46="$emit('removeCard')"
         @paste="onPaste"
         class="strikethrough box-text flex-fill"
         placeholder="Enter todo list text"
         :data-value="linkifiedText"
-      ></b-form-input>
+        @input="event => (todo.text = event.target.innerHTML)"
+      ></div>
+      <!-- </b-form-input> -->
       <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
         <template #button-content>
           <svg
@@ -411,6 +414,7 @@ export default class Card extends Vue {
     }
   }
   mounted() {
+    this.todoInput.innerText = this.todo.text;
     this.todo.imgList.forEach(ele => {
       const urlCreator = window.URL || window.webkitURL;
       // console.log(ele);
@@ -491,7 +495,6 @@ export default class Card extends Vue {
     //   /* … */
     // };
     // linkifyElement(document.getElementById("id"), options, document);
-
     return this.todo.text;
   }
 
@@ -529,12 +532,50 @@ export default class Card extends Vue {
 .drag-handle {
   /* line-height: 20px; */
   cursor: grab;
-  margin-top: 6px;
+  margin-top: 2.7px;
 }
 .box-fix {
   margin-bottom: 4px;
   margin-left: 6px;
+  margin-top: 2.5px;
 }
+
+::v-deep .dropdown-toggle {
+  padding-top: 3px;
+}
+
+.box-text {
+  margin-left: 6px;
+  width: 80%;
+  vertical-align: middle;
+  border: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 3px 2px;
+  text-align: left;
+  -webkit-user-modify: read-write;
+  overflow-wrap: break-word;
+  -webkit-line-break: after-white-space;
+}
+.box-text[contenteditable]:focus {
+  outline: 0px solid transparent;
+}
+.box-text[contenteditable]:empty:before {
+  content: attr(placeholder);
+  // pointer-events: none;
+  display: block;
+  color: grey;
+  // color: rgba(255, 255, 255, 0.9);
+  // -webkit-text-fill-color: rgba(255, 255, 255, 0.4);
+}
+::v-deep .box-text:focus {
+  border: 0;
+  transition: none;
+  border-color: #cccccc;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
 input[type="checkbox"]:checked + .strikethrough:not([data-value=""]) {
   text-decoration: line-through;
   opacity: 0.375;
@@ -615,18 +656,7 @@ img {
   border-color: #e4606d !important;
   box-shadow: 0 0 0 0.2rem rgb(220 53 69 / 25%);
 }
-.box-text {
-  margin-left: 6px;
-  width: auto;
-  border: 0;
-}
-::v-deep .box-text:focus {
-  border: 0;
-  transition: none;
-  border-color: #cccccc;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
+
 ::v-deep .todo-ele .btn-link {
   color: #212529;
 }
