@@ -23,11 +23,23 @@ export default {
   methods: {
     ListenToDocumentSelection() {
       this.sel = window.getSelection();
+      const tagNames = ["SPAN", "B", "I", "U", "STRIKE", "STRONG"];
       setTimeout(_ => {
         if (this.sel && !this.sel.isCollapsed) {
           this.selectedText = this.sel.toString();
-          if (this.sel.rangeCount) {
+          if (
+            this.sel.rangeCount &&
+            tagNames.indexOf(
+              this.sel.getRangeAt(0).cloneRange().startContainer.parentNode
+                .tagName
+            ) !== -1 &&
+            tagNames.indexOf(
+              this.sel.getRangeAt(0).cloneRange().endContainer.parentNode
+                .tagName
+            ) !== -1
+          ) {
             const range = this.sel.getRangeAt(0).cloneRange();
+
             if (range.getBoundingClientRect) {
               const rect = range.getBoundingClientRect();
               const left = rect.left + (rect.right - rect.left) / 2;
