@@ -445,16 +445,19 @@ export default class Card extends Vue {
     // );
     // (event.target as HTMLDivElement).innerText = this.todo.text;
   }
-  onPaste(event: { clipboardData: DataTransfer }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onPaste(event: any) {
     const items = event.clipboardData.items;
     if (items == undefined) {
       return;
     }
+
     for (let i = 0; i < items.length; i++) {
       // Skip content if not image
       if (items[i].type.indexOf("image") == -1) continue;
       // Retrieve image on clipboard as blob
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      event.preventDefault();
       const blob: any = items[i].getAsFile();
       const urlCreator = window.URL || window.webkitURL;
       const imageUrl = urlCreator.createObjectURL(blob);

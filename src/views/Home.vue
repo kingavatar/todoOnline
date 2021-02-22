@@ -88,6 +88,7 @@
         <Card todoText=""/> -->
       </draggable>
     </b-card>
+    <Popup />
   </div>
 </template>
 
@@ -97,6 +98,7 @@
 import Card from "@/components/Card.vue";
 import draggable from "vuedraggable";
 import { mapGetters } from "vuex";
+import Popup from "@/components/Popup.vue";
 // import { v4 as uuidv4 } from "uuid";
 import { Todo } from "@/types";
 
@@ -105,7 +107,8 @@ export default {
   components: {
     // HelloWorld
     Card,
-    draggable
+    draggable,
+    Popup
   },
   data: function() {
     return {
