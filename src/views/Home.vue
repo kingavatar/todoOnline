@@ -126,6 +126,15 @@ export default {
     },
     removeCard(index) {
       this.$delete(this.todoList, index);
+      if (index > 0) {
+        this.$nextTick(() => {
+          this.moveCursorToEnd(
+            this.$refs.cards.find(
+              i => i.$props.todo.id === this.todoList[index - 1].id
+            ).todoInput
+          );
+        });
+      }
     },
     copyCard(index) {
       const newCard = new Todo();
@@ -151,6 +160,26 @@ export default {
       this.todoList.forEach(ele => {
         ele.checked = false;
       });
+    },
+    moveCursorToEnd(el) {
+      if (el.innerText.length > 0) {
+        const setpos = document.createRange();
+        // Creates object for selection
+        const set = window.getSelection();
+        // Set start position of range
+        setpos.setStart(el.childNodes[0], el.innerText.length);
+        // Collapse range within its boundary points
+        // Returns boolean
+        setpos.collapse(true);
+        // Remove all ranges set
+        set.removeAllRanges();
+        // Add range with respect to range object.
+        set.addRange(setpos);
+        // Set cursor on focus
+        el.focus();
+      } else {
+        el.focus();
+      }
     }
   },
   computed: {

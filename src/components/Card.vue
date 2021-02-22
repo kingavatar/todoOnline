@@ -39,7 +39,7 @@
       placeholder="Enter todolist text"
     > {{todoText}}</b-card-text> -->
       <!-- v-model="todo.text" -->
-      <div
+      <span
         contenteditable="true"
         ref="todoInput"
         spellcheck="true"
@@ -47,13 +47,15 @@
         v-on:keydown.enter.prevent
         v-on:keyup.enter="$emit('addCard')"
         v-on:keyup.46="$emit('removeCard')"
+        v-on:keyup.8="checkDelete"
         @paste="onPaste"
         class="strikethrough box-text flex-fill"
         placeholder="Enter todo list text"
         :data-value="linkifiedText"
-        v-text="todo.text"
-        @blur="updateTodoText"
-      ></div>
+        @focus="checkEmpty = true"
+        @input="updateTodoText"
+      ></span>
+      <!-- v-text="todo.text" -->
       <!-- </b-form-input> -->
       <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
         <template #button-content>
@@ -401,8 +403,17 @@ export default class Card extends Vue {
   @Ref() todoInput!: HTMLInputElement;
   private embedList: Array<{ url: string }> = [];
   private imgList: Array<{ url: string | ArrayBuffer }> = [];
-  data() {
-    return {};
+  private checkEmpty = true;
+
+  mounted() {
+    this.todoInput.innerHTML = this.todo.text;
+    this.todo.imgList.forEach(ele => {
+      const urlCreator = window.URL || window.webkitURL;
+      // console.log(ele);
+      const eleBlob: Blob = this.dataURItoBlob(ele);
+      const imageUrl = urlCreator.createObjectURL(eleBlob);
+      this.imgList.push({ url: imageUrl });
+    });
   }
   changeCardPriority(priority: number) {
     this.todo.priority = priority;
@@ -414,21 +425,25 @@ export default class Card extends Vue {
         break;
     }
   }
-  updateTodoText(event: Event) {
-    this.todo.text = (event.target as HTMLDivElement).innerText.replace(
-      /\n/g,
-      ""
-    );
-    (event.target as HTMLDivElement).innerText = this.todo.text;
+  checkDelete(event: Event) {
+    if ((event.target as HTMLSpanElement).innerHTML == "" && this.checkEmpty) {
+      this.$emit("removeCard");
+    } else if (
+      (event.target as HTMLSpanElement).innerHTML == "" &&
+      !this.checkEmpty
+    )
+      this.checkEmpty = true;
   }
-  mounted() {
-    this.todo.imgList.forEach(ele => {
-      const urlCreator = window.URL || window.webkitURL;
-      // console.log(ele);
-      const eleBlob: Blob = this.dataURItoBlob(ele);
-      const imageUrl = urlCreator.createObjectURL(eleBlob);
-      this.imgList.push({ url: imageUrl });
-    });
+  updateTodoText(event: Event) {
+    this.todo.text = (event.target as HTMLSpanElement).innerHTML;
+    if (this.todo.text.length > 0) {
+      this.checkEmpty = false;
+    }
+    // .replace(
+    //   /\n/g,
+    //   ""
+    // );
+    // (event.target as HTMLDivElement).innerText = this.todo.text;
   }
   onPaste(event: { clipboardData: DataTransfer }) {
     const items = event.clipboardData.items;
@@ -557,8 +572,10 @@ export default class Card extends Vue {
   width: 80%;
   vertical-align: middle;
   border: 0;
+  min-height: 24px;
   border-radius: 2.5px;
-  white-space: pre-wrap;
+  // white-space: pre-wrap;
+  white-space: pre-line;
   word-break: break-word;
   padding: 3px 2px;
   text-align: left;
