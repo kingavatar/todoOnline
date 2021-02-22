@@ -11,6 +11,7 @@
 export default {
   data() {
     return {
+      sel: undefined,
       popupInitialTopOffset: 0,
       popupInitialLeftOffset: 0,
       offsetTop: 0,
@@ -21,18 +22,19 @@ export default {
   },
   methods: {
     ListenToDocumentSelection() {
-      const sel = window.getSelection();
+      this.sel = window.getSelection();
       setTimeout(_ => {
-        if (sel && !sel.isCollapsed) {
-          this.selectedText = sel.toString();
-          if (sel.rangeCount) {
-            const range = sel.getRangeAt(0).cloneRange();
+        if (this.sel && !this.sel.isCollapsed) {
+          this.selectedText = this.sel.toString();
+          if (this.sel.rangeCount) {
+            const range = this.sel.getRangeAt(0).cloneRange();
             if (range.getBoundingClientRect) {
               const rect = range.getBoundingClientRect();
               const left = rect.left + (rect.right - rect.left) / 2;
               const top = rect.top;
 
-              this.offsetTop = top - this.popupInitialTopOffset - 30 + "px";
+              // eslint-disable-next-line prettier/prettier
+              this.offsetTop = window.pageYOffset+ top - this.popupInitialTopOffset - 30 + "px";
 
               this.offsetLeft = left - this.popupInitialLeftOffset / 2 + "px";
             }
@@ -48,15 +50,15 @@ export default {
     // },
     BoldSelectedText() {
       if (window.getSelection) {
-        const sel = window.getSelection();
-        if (sel.rangeCount) {
+        // const sel = window.getSelection();
+        if (this.sel.rangeCount) {
           //   const newNode = document.createElement("span");
           //   newNode.className = "bold-text";
           //   newNode.append(this.range.extractContents());
 
           //   this.range.insertNode(newNode);
-          sel.removeAllRanges();
-          sel.addRange(this.range);
+          this.sel.removeAllRanges();
+          this.sel.addRange(this.range);
           document.execCommand("bold");
         }
       }
@@ -64,8 +66,8 @@ export default {
     },
     ItalicSelectedText() {
       if (window.getSelection) {
-        const sel = window.getSelection();
-        if (sel.rangeCount) {
+        // const sel = window.getSelection();
+        if (this.sel.rangeCount) {
           //   const newNode = document.createElement("span");
           //   newNode.className = "italic-text";
           //   //   const docFragment = this.range.cloneContents();
@@ -76,34 +78,34 @@ export default {
           //   //   } else {
           //   //   this.range.surroundContents(newNode);
           //   this.range.insertNode(newNode);
-          sel.removeAllRanges();
-          sel.addRange(this.range);
+          this.sel.removeAllRanges();
+          this.sel.addRange(this.range);
           document.execCommand("italic");
         }
       }
     },
     UnderlineSelectedText() {
       if (window.getSelection) {
-        const sel = window.getSelection();
-        if (sel.rangeCount) {
+        // const sel = window.getSelection();
+        if (this.sel.rangeCount) {
           //   const newNode = document.createElement("span");
           //   //   const docFragment = this.range.cloneContents();
           //   const extract = this.range.extractContents();
           //   newNode.className = "underline-text";
           //   newNode.append(extract);
           //   this.range.insertNode(newNode);
-          sel.removeAllRanges();
-          sel.addRange(this.range);
+          this.sel.removeAllRanges();
+          this.sel.addRange(this.range);
           document.execCommand("underline");
         }
       }
     },
     strikeThroughSelectedText() {
       if (window.getSelection) {
-        const sel = window.getSelection();
-        if (sel.rangeCount) {
-          sel.removeAllRanges();
-          sel.addRange(this.range);
+        // const sel = window.getSelection();
+        if (this.sel.rangeCount) {
+          this.sel.removeAllRanges();
+          this.sel.addRange(this.range);
           document.execCommand("strikeThrough");
         }
       }
