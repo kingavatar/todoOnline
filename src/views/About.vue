@@ -65,8 +65,28 @@ export default Vue.extend({
 @media (min-width: 1400px) {
   #about {
     max-width: 25%;
-    width: 20%;
+    width: 200px;
+    // margin-right: auto;
     position: fixed;
+    overflow: hidden;
+  }
+}
+@media (min-width: 1500px) {
+  #about {
+    max-width: 25%;
+    width: 15%;
+    // margin-right: auto;
+    position: fixed;
+    overflow: hidden;
+  }
+}
+@media (min-width: 1650px) {
+  #about {
+    max-width: 25%;
+    width: 20%;
+    // margin-right: auto;
+    position: fixed;
+    overflow: hidden;
   }
 }
 ::v-deep #about-heading {
