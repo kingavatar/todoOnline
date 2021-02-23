@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-ele-container">
+  <div class="todo-ele-container" @dragover.prevent @drop="onDrop">
     <div class="row todo-ele">
       <div class="drag-handle">
         <svg
@@ -444,6 +444,47 @@ export default class Card extends Vue {
     //   ""
     // );
     // (event.target as HTMLDivElement).innerText = this.todo.text;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onDrop(e: any) {
+    e.stopPropagation();
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files == undefined) {
+      return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+      // Skip content if not image
+      if (files[i].type.indexOf("image") == -1) continue;
+      // Retrieve image on clipboard as blob
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const blob: any = files[i];
+      const urlCreator = window.URL || window.webkitURL;
+      const imageUrl = urlCreator.createObjectURL(blob);
+      // console.log(imageUrl);
+      const reader = new FileReader();
+      let imgBase64: string | ArrayBuffer = "";
+      const base64ImageLoad = () => {
+        if (reader.result != null) {
+          imgBase64 = reader.result;
+          console.log(imgBase64);
+          // this.imgList.push({ url: imgBase64 });
+          this.todo.imgList.push(imgBase64);
+        }
+      };
+      reader.onloadend = base64ImageLoad;
+      // function() {
+      //   imgBase64 = reader.result;
+      //   console.log(imgBase64);
+      // };
+      reader.readAsDataURL(blob);
+
+      this.imgList.push({ url: imageUrl });
+      // (this.$refs.myimg as HTMLImageElement).src = imageUrl;
+      // this.embedList.push({ url: imageUrl });
+    }
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPaste(event: any) {
