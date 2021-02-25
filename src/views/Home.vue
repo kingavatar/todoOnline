@@ -81,6 +81,8 @@
           @removeCard="removeCard(index)"
           @copyCard="copyCard(index)"
           @addCard="addCardIndex(index)"
+          @toggleEmojiPicker="toggleEmojiPicker(todo.id)"
+          @toggleFocus="toggleinputFocus"
           ref="cards"
         />
         <!-- <Card todoText="Something 2"/>
@@ -88,7 +90,8 @@
         <Card todoText=""/> -->
       </draggable>
     </b-card>
-    <Popup />
+    <Popup ref="popup" />
+    <EmojiPicker ref="emoji" />
   </div>
 </template>
 
@@ -99,6 +102,8 @@ import Card from "@/components/Card.vue";
 import draggable from "vuedraggable";
 import { mapGetters } from "vuex";
 import Popup from "@/components/Popup.vue";
+import EmojiPicker from "@/components/EmojiPicker.vue";
+
 // import { v4 as uuidv4 } from "uuid";
 import { Todo } from "@/types";
 
@@ -108,12 +113,14 @@ export default {
     // HelloWorld
     Card,
     draggable,
-    Popup
+    Popup,
+    EmojiPicker
   },
   data: function() {
     return {
       title: "Hey there 👋",
-      todoList: []
+      todoList: [],
+      istodoInputfocused: false
     };
   },
   mounted() {
@@ -163,24 +170,75 @@ export default {
       this.todoList.forEach(ele => {
         ele.checked = false;
       });
+      console.log(
+        this.$refs.cards.find(i => i.$props.todo.id === this.currentIdx)
+          .todoInput.innerHTML
+      );
+    },
+    toggleinputFocus(value) {
+      this.istodoInputfocused = value;
+      // this.$refs.emoji.showEmojiPicker = false;
+    },
+    toggleEmojiPicker(id) {
+      let sel, range;
+      if (!this.$refs.emoji.showEmojiPicker) {
+        if (!this.istodoInputfocused) {
+          this.moveCursorToEnd(
+            this.$refs.cards.find(i => i.$props.todo.id === id).todoInput
+          );
+        }
+      }
+      if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+          range = sel.getRangeAt(0);
+          this.$refs.emoji.toggleEmojiPicker(
+            range,
+            this.$refs.cards.find(i => i.$props.todo.id === id)
+          );
+        } else {
+          this.$refs.emoji.toggleEmojiPicker(
+            undefined,
+            this.$refs.cards.find(i => i.$props.todo.id === id)
+          );
+        }
+      }
     },
     moveCursorToEnd(el) {
-      if (el.innerText.length > 0) {
-        const setpos = document.createRange();
-        // Creates object for selection
-        const set = window.getSelection();
-        // Set start position of range
-        setpos.setStart(el.childNodes[0], el.innerText.length);
-        // Collapse range within its boundary points
-        // Returns boolean
-        setpos.collapse(true);
-        // Remove all ranges set
-        set.removeAllRanges();
-        // Add range with respect to range object.
-        set.addRange(setpos);
-        // Set cursor on focus
+      // if (el.innerText.length > 0) {
+      //   const setpos = document.createRange();
+      //   // Creates object for selection
+      //   const set = window.getSelection();
+      //   // Set start position of range
+      //   setpos.setStart(el.childNodes[0], el.innerText.length);
+      //   // Collapse range within its boundary points
+      //   // Returns boolean
+      //   setpos.collapse(true);
+      //   // Remove all ranges set
+      //   set.removeAllRanges();
+      //   // Add range with respect to range object.
+      //   set.addRange(setpos);
+      //   // Set cursor on focus
+      //   el.focus();
+      // } else {
+      //   el.focus();
+      // }
+      let range, selection;
+      if (document.createRange) {
+        //Firefox, Chrome, Opera, Safari, IE 9+
+        range = document.createRange(); //Create a range (a range is a like the selection but invisible)
+        range.selectNodeContents(el); //Select the entire contents of the element with the range
+        range.collapse(false); //collapse the range to the end point. false means collapse to end rather than the start
+        selection = window.getSelection(); //get the selection object (allows you to change selection)
+        selection.removeAllRanges(); //remove any selections already made
+        selection.addRange(range); //make the range you have just created the visible selection
         el.focus();
-      } else {
+      } else if (document.selection) {
+        //IE 8 and lower
+        range = document.body.createTextRange(); //Create a range (a range is a like the selection but invisible)
+        range.moveToElementText(el); //Select the entire contents of the element with the range
+        range.collapse(false); //collapse the range to the end point. false means collapse to end rather than the start
+        range.select(); //Select the range (make it the visible selection
         el.focus();
       }
     }
@@ -194,7 +252,10 @@ export default {
         ghostClass: "blue-background-class"
       };
     },
-    ...mapGetters(["getDemoTodoCard"])
+    ...mapGetters(["getDemoTodoCard"]),
+    cardRefs() {
+      return this.$refs.cards;
+    }
   }
 };
 </script>

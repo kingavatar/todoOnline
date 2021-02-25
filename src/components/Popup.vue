@@ -17,7 +17,8 @@ export default {
       offsetTop: 0,
       offsetLeft: "-999em",
       selectedText: undefined,
-      range: undefined
+      range: undefined,
+      originalRange: undefined
     };
   },
   methods: {
@@ -25,6 +26,13 @@ export default {
       this.sel = window.getSelection();
       const tagNames = ["SPAN", "B", "I", "U", "STRIKE", "STRONG"];
       setTimeout(_ => {
+        if (
+          tagNames.indexOf(
+            this.sel.getRangeAt(0).cloneRange().startContainer.parentNode
+              .tagName
+          ) !== -1
+        )
+          this.originalRange = this.sel.getRangeAt(0);
         if (this.sel && !this.sel.isCollapsed) {
           this.selectedText = this.sel.toString();
           if (
@@ -39,7 +47,7 @@ export default {
             ) !== -1
           ) {
             const range = this.sel.getRangeAt(0).cloneRange();
-
+            this.originalRange = this.sel.getRangeAt(0);
             if (range.getBoundingClientRect) {
               const rect = range.getBoundingClientRect();
               const left = rect.left + (rect.right - rect.left) / 2;
@@ -126,9 +134,11 @@ export default {
   mounted() {
     this.popupInitialTopOffset = this.$refs.popup.offsetHeight;
     this.popupInitialLeftOffset = this.$refs.popup.offsetWidth;
+    window.addEventListener("keyup", this.ListenToDocumentSelection);
     window.addEventListener("mouseup", this.ListenToDocumentSelection);
   },
   destroyed() {
+    window.removeEventListener("keyup", this.ListenToDocumentSelection);
     window.removeEventListener("mouseup", this.ListenToDocumentSelection);
   }
 };
