@@ -177,7 +177,6 @@ export default {
     },
     toggleinputFocus(value) {
       this.istodoInputfocused = value;
-      // this.$refs.emoji.showEmojiPicker = false;
     },
     toggleEmojiPicker(id) {
       let sel, range;

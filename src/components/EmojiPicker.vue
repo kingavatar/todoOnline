@@ -10,6 +10,7 @@
       title="Pick your emoji..."
       emoji="point_up"
       @select="addEmoji"
+      v-on-clickaway="hide"
     />
   </div>
 </template>
@@ -23,12 +24,17 @@ import "emoji-mart-vue-fast/css/emoji-mart.css";
 
 import { Picker, EmojiIndex } from "emoji-mart-vue-fast";
 
+import { directive as onClickaway } from "vue-clickaway";
+
 const emojiIndex = new EmojiIndex(data);
 
 export default Vue.extend({
   name: "EmojiPicker",
   components: {
     Picker
+  },
+  directives: {
+    onClickaway: onClickaway
   },
   data: function() {
     return {
@@ -69,6 +75,13 @@ export default Vue.extend({
         this.cardRef.$refs.emojiTrigger.getBoundingClientRect().left -
         this.popupInitialLeftOffset / 2 +
         "px";
+    },
+    hide(e) {
+      if (
+        e.target.parentNode.classList.value !== "emoji-trigger" &&
+        e.target.classList.value !== "emoji-trigger"
+      )
+        this.showEmojiPicker = false;
     },
     addEmoji(emoji) {
       if (this.range) {
