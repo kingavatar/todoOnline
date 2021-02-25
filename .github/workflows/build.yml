@@ -9,6 +9,7 @@ jobs:
 
       - name: "Install and Build 🔧"
         run: |
+          npm uninstall *
           npm install
           npm run build
 
