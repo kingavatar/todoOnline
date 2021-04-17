@@ -28,5 +28,15 @@ export class TodoCard {
 }
 export type TodoCards = TodoCard[];
 export interface RootState {
+  note: NoteState;
+}
+
+export interface NoteState {
   todos: TodoCards;
+}
+
+export interface AuthState {
+  status: string;
+  token: string;
+  user: Record<string, any>;
 }

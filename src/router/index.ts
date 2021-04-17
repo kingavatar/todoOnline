@@ -1,14 +1,22 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
+import Demo from "../views/Demo.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    redirect: "/dashboard"
+  },
+  {
+    path: "/getting-started",
+    name: "Demo",
+    component: Demo,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/about",
@@ -18,6 +26,21 @@ const routes: Array<RouteConfig> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Login.vue")
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Dashboard.vue"),
+    meta: {
+      requiresAuth: true
+    }
   }
 ];
 
@@ -28,3 +51,14 @@ const router = new VueRouter({
 });
 
 export default router;
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters["auth/isLoggedIn"]) {
+      next();
+      return;
+    }
+    next("/login");
+  } else {
+    next();
+  }
+});

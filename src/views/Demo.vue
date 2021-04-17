@@ -2,7 +2,8 @@
   <div id="home">
     <!-- <img alt="Vue logo" src="../assets/logo.png" /> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
-    <b-card class="w-100 todo-card shadow" style="margin-top: 100px;">
+    <b-breadcrumb id="demoBreadCrumb" :items="items"></b-breadcrumb>
+    <b-card class="w-100 todo-card shadow" style="margin-top: 70px;">
       <b-card-title class="row">
         <div class="flex-fill todo-card-title" contenteditable="true">
           {{ title }}
@@ -108,7 +109,7 @@ import EmojiPicker from "@/components/EmojiPicker.vue";
 import { Todo } from "@/types";
 
 export default {
-  name: "Home",
+  name: "Demo",
   components: {
     // HelloWorld
     Card,
@@ -120,7 +121,17 @@ export default {
     return {
       title: "Hey there 👋",
       todoList: [],
-      istodoInputfocused: false
+      istodoInputfocused: false,
+      items: [
+        {
+          text: "Dashboard",
+          href: "/dashboard"
+        },
+        {
+          text: "Getting-Started",
+          active: true
+        }
+      ]
     };
   },
   mounted() {
@@ -251,7 +262,7 @@ export default {
         ghostClass: "blue-background-class"
       };
     },
-    ...mapGetters(["getDemoTodoCard"]),
+    ...mapGetters("note", ["getDemoTodoCard"]),
     cardRefs() {
       return this.$refs.cards;
     }
@@ -294,6 +305,16 @@ export default {
   /* height: 50px !important; */
   /* width: 100px !important; */
   padding: 10px;
+}
+#demoBreadCrumb {
+  margin-top: 120px;
+  margin-bottom: -30px;
+  width: 75%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  right: 100px;
 }
 @include media-breakpoint-down(xl) {
   .todo-card {

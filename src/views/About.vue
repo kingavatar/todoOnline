@@ -3,6 +3,16 @@
     <div id="about-heading" class="text-center" @click="show = !show">
       about
     </div>
+    <b-row
+      v-if="isLoggedIn"
+      align-h="end"
+      style="margin-right:40px;"
+      class="mt-4"
+    >
+      <b-button variant="outline-info" @click="logout"
+        ><b-icon icon="door-closed" /> Logout</b-button
+      >
+    </b-row>
     <transition name="fade" v-on:after-enter="afterEnter">
       <div v-if="mobileShow" class="vertical-center">
         <div class="about-info">
@@ -17,6 +27,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapGetters } from "vuex";
 export default Vue.extend({
   name: "About",
   data: function() {
@@ -31,6 +42,12 @@ export default Vue.extend({
     },
     resize() {
       this.screenWidth = window.innerWidth;
+    },
+    logout() {
+      this.$store
+        .dispatch("auth/logout")
+        .then(() => this.$router.push("/login"))
+        .catch(err => console.log(err));
     }
   },
   mounted() {
@@ -42,7 +59,8 @@ export default Vue.extend({
   computed: {
     mobileShow: function(): boolean {
       return this.screenWidth < 1400 || this.show;
-    }
+    },
+    ...mapGetters("auth", ["isLoggedIn"])
   }
 });
 </script>

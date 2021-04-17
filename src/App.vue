@@ -5,7 +5,9 @@
       <router-link to="/about">About</router-link>
     </div> -->
     <Toolbar />
-    <router-view id="app-home" class="container-lg" />
+    <b-col>
+      <router-view id="app-home" class="container-lg"> </router-view>
+    </b-col>
     <About />
   </div>
 </template>
@@ -14,7 +16,10 @@ import Vue from "vue";
 import About from "./views/About.vue";
 import Toolbar from "./views/Toolbar.vue";
 export default Vue.extend({
-  components: { About, Toolbar }
+  components: { About, Toolbar },
+  data() {
+    return {};
+  }
 });
 </script>
 <style lang="scss">
@@ -31,6 +36,7 @@ export default Vue.extend({
 }
 
 #app-home {
+  height: 100vh;
   // margin-right: 5%;
   // margin-right: 5%;
 }
@@ -53,6 +59,7 @@ export default Vue.extend({
 #app-view {
   padding: 30px;
 }
+
 @media (max-width: 1400px) {
   #app-home {
     margin-left: auto;
