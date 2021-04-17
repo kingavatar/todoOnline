@@ -1,10 +1,10 @@
 <template>
-  <div id="login">
+  <div id="signup">
     <b-container fluid class="h-100 w-100 laysize">
       <b-row class="h-100 w-100" align-h="center" align-v="center">
         <b-card class="shadow" style="width:600px;">
           <b-card-title id="card-heading">Todo Online</b-card-title>
-          <b-card-sub-title id="card-sub-heading">Sign in</b-card-sub-title>
+          <b-card-sub-title id="card-sub-heading">Sign Up</b-card-sub-title>
           <b-form @submit="onSubmit" @reset="onReset" v-if="show">
             <b-form-group
               id="input-group-1"
@@ -22,7 +22,39 @@
             </b-form-group>
 
             <b-form-group
-              id="input-group-pass"
+              id="input-group-firstName"
+              label="First Name"
+              label-for="firstName-input"
+            >
+              <b-form-input
+                id="firstName-input"
+                v-model="form.firstName"
+                placeholder="Enter First name"
+                :state="firstValidation"
+                required
+              ></b-form-input>
+              <b-form-invalid-feedback :state="firstValidation">
+                Your First Name must be atleast 5 characters long.
+              </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group
+              id="input-group-lastName"
+              label="Last Name"
+              label-for="input-lastName"
+            >
+              <b-form-input
+                id="input-lastName"
+                v-model="form.lastName"
+                placeholder="Enter Last name"
+                :state="lastValidation"
+                required
+              ></b-form-input>
+              <b-form-invalid-feedback :state="lastValidation">
+                Your Last Name must be atleast 3 characters long.
+              </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group
+              id="input-group-3"
               label="Password"
               label-for="text-password"
             >
@@ -65,31 +97,33 @@
 
 <script>
 import Vue from "vue";
-import { mapGetters } from "vuex";
-import store from '../store'
 export default Vue.extend({
-  name: "Login",
+  name: "SignUp",
   data: function() {
     return {
       form: {
         email: "",
+        firstName: "",
+        lastName: "",
         password: ""
       },
       show: true
     };
   },
   methods: {
-     onSubmit(event) {
+    onSubmit(event) {
       event.preventDefault();
       this.$store
-        .dispatch("auth/login", this.form)
-        .then(() =>this.$router.push("/"))
+        .dispatch("auth/signup", this.form)
+        .then(() => this.$router.push("/dashboard"))
         .catch(err => console.log(err));
     },
     onReset(event) {
       event.preventDefault();
       // Reset our form values
       this.form.email = "";
+      this.form.firstName = "";
+      this.form.lastName = "";
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
@@ -99,6 +133,16 @@ export default Vue.extend({
   },
   // mounted() {},
   computed: {
+    firstValidation() {
+      return this.form.firstName.length == 0
+        ? null
+        : this.form.firstName.length > 4;
+    },
+    lastValidation() {
+      return this.form.lastName.length == 0
+        ? null
+        : this.form.lastName.length > 2;
+    },
     passValidation() {
       return this.form.password.length == 0
         ? null
@@ -115,15 +159,6 @@ export default Vue.extend({
       return this.form.password.length == 0
         ? null
         : this.form.password.length > 7 && this.form.password.length < 21;
-    },
-    ...mapGetters(["auth/isLoggedIn"])
-  },
-  beforeRouteEnter(to,from,next){
-    if(store.getters["auth/isLoggedIn"]){
-      next("/dashboard");
-    }
-    else{
-      next();
     }
   }
 });

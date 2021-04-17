@@ -103,7 +103,6 @@ export default Vue.extend({
           selection.removeAllRanges();
           selection.addRange(this.range);
         } else {
-          console.log("haha");
           this.$parent.$refs.popup.originalRange.deleteContents();
           this.$parent.$refs.popup.originalRange.insertNode(emojinode);
           this.$parent.$refs.popup.originalRange.setStartAfter(emojinode);

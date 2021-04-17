@@ -13,6 +13,17 @@
         ><b-icon icon="door-closed" /> Logout</b-button
       >
     </b-row>
+    <b-row
+      v-else-if="!isLoggedIn"
+      align-h="end"
+      style="margin-right:40px;"
+      class="mt-4"
+    >
+      <b-button variant="outline-info" @click="SignUp"
+        ><b-icon icon="door-closed" />
+        {{ this.$route.name === "SignUp" ? "Sign In" : "Sign Up" }}</b-button
+      >
+    </b-row>
     <transition name="fade" v-on:after-enter="afterEnter">
       <div v-if="mobileShow" class="vertical-center">
         <div class="about-info">
@@ -25,7 +36,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import { mapGetters } from "vuex";
 export default Vue.extend({
@@ -33,7 +44,8 @@ export default Vue.extend({
   data: function() {
     return {
       show: false,
-      screenWidth: window.innerWidth
+      screenWidth: window.innerWidth,
+      prevRoute: ""
     };
   },
   methods: {
@@ -48,6 +60,23 @@ export default Vue.extend({
         .dispatch("auth/logout")
         .then(() => this.$router.push("/login"))
         .catch(err => console.log(err));
+    },
+    SignUp() {
+      if (this.$route.name === "SignUp") {
+        if (this.prevRoute === "") {
+          this.prevRoute = this.$route.name;
+          this.$router.push("/login");
+        } else if (this.prevRoute === "Login") {
+          this.prevRoute = this.$route.name;
+          this.$router.go(-1);
+        } else {
+          this.prevRoute = this.$route.name;
+          this.$router.push("/login");
+        }
+      } else {
+        this.prevRoute = this.$route.name;
+        this.$router.push("/signup");
+      }
     }
   },
   mounted() {
@@ -57,7 +86,7 @@ export default Vue.extend({
     window.removeEventListener("resize", this.resize);
   },
   computed: {
-    mobileShow: function(): boolean {
+    mobileShow: function() {
       return this.screenWidth < 1400 || this.show;
     },
     ...mapGetters("auth", ["isLoggedIn"])

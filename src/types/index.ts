@@ -29,6 +29,7 @@ export class TodoCard {
 export type TodoCards = TodoCard[];
 export interface RootState {
   note: NoteState;
+  auth: AuthState;
 }
 
 export interface NoteState {
