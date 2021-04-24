@@ -2,10 +2,14 @@
   <div id="home">
     <!-- <img alt="Vue logo" src="../assets/logo.png" /> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
-    <b-breadcrumb id="demoBreadCrumb" :items="items"></b-breadcrumb>
+    <b-breadcrumb id="pageBreadCrumb" :items="items"></b-breadcrumb>
     <b-card class="w-100 todo-card shadow" style="margin-top: 70px;">
       <b-card-title class="row">
-        <div class="flex-fill todo-card-title" contenteditable="true">
+        <div
+          class="flex-fill todo-card-title"
+          contenteditable="true"
+          @blur="titleInput"
+        >
           {{ title }}
         </div>
         <b-button
@@ -101,15 +105,17 @@
 // import HelloWorld from "@/components/HelloWorld.vue";
 import Card from "@/components/Card.vue";
 import draggable from "vuedraggable";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import Popup from "@/components/Popup.vue";
 import EmojiPicker from "@/components/EmojiPicker.vue";
 
 // import { v4 as uuidv4 } from "uuid";
 import { Note } from "@/types";
+import { debounce } from "lodash";
+import axios from "axios";
 
 export default {
-  name: "Demo",
+  name: "Page",
   components: {
     // HelloWorld
     Card,
@@ -128,15 +134,42 @@ export default {
           href: "/dashboard"
         },
         {
-          text: "Getting-Started",
+          text: "",
           active: true
         }
       ]
     };
   },
-  mounted() {
-    this.title = (" " + this.getDemoPage.title).slice(1);
-    this.notesIn = [...this.getDemoPage.notesIn];
+  async mounted() {
+    await this.getPageSrv(this.$route.params.id);
+    this.title = (" " + this.page.title).slice(1);
+    const notesIn = [...this.page.notesIn];
+    if (notesIn.length > 0) {
+      if (typeof notesIn[0] === "string") {
+        axios.defaults.headers.common[
+          "authorization"
+        ] = this.$store.state.auth.token;
+        axios
+          .get(
+            "http://localhost:3000/api/note/page/" + this.$route.params.id
+            //  { withCredentials: true }
+          )
+          .then(resp => {
+            const notes = resp.data;
+            // console.log(page,resp.data);
+            this.notesIn = notes;
+          })
+          .catch(err => {
+            console.log(err);
+            this.notesIn = [];
+          });
+      } else {
+        this.notesIn = notesIn;
+      }
+    }
+    this.items.find(i =>
+      Object.prototype.hasOwnProperty.call(i, "active")
+    ).text = this.title;
   },
   methods: {
     addCard() {
@@ -151,7 +184,7 @@ export default {
         this.$nextTick(() => {
           this.moveCursorToEnd(
             this.$refs.cards.find(
-              i => i.$props.todo.id === this.notesIn[index - 1].id
+              i => i.$props.todo._id === this.notesIn[index - 1]._id
             ).todoInput
           );
         });
@@ -182,7 +215,7 @@ export default {
         ele.checked = false;
       });
       console.log(
-        this.$refs.cards.find(i => i.$props.todo.id === this.currentIdx)
+        this.$refs.cards.find(i => i.$props.todo._id === this.currentIdx)
           .todoInput.innerHTML
       );
     },
@@ -194,7 +227,7 @@ export default {
       if (!this.$refs.emoji.showEmojiPicker) {
         if (!this.istodoInputfocused) {
           this.moveCursorToEnd(
-            this.$refs.cards.find(i => i.$props.todo.id === id).todoInput
+            this.$refs.cards.find(i => i.$props.todo._id === id).todoInput
           );
         }
       }
@@ -204,12 +237,12 @@ export default {
           range = sel.getRangeAt(0);
           this.$refs.emoji.toggleEmojiPicker(
             range,
-            this.$refs.cards.find(i => i.$props.todo.id === id)
+            this.$refs.cards.find(i => i.$props.todo._id === id)
           );
         } else {
           this.$refs.emoji.toggleEmojiPicker(
             undefined,
-            this.$refs.cards.find(i => i.$props.todo.id === id)
+            this.$refs.cards.find(i => i.$props.todo._id === id)
           );
         }
       }
@@ -251,7 +284,29 @@ export default {
         range.select(); //Select the range (make it the visible selection
         el.focus();
       }
-    }
+    },
+    ...mapActions({
+      updatePage: "note/updatePage",
+      getPageSrv: "note/getPage"
+    }),
+    titleInput(event) {
+      this.title = event.target.innerText;
+      this.items.find(i =>
+        Object.prototype.hasOwnProperty.call(i, "active")
+      ).text = this.title;
+      this.debouncedSavePage();
+    },
+    debouncedSavePage: debounce(function() {
+      // const page = {
+      //   _id: this.$route.params.id,
+      //   title: title,
+      //   notesIn: notesIn
+      // };
+      const page = JSON.parse(JSON.stringify(this.page));
+      page.title = this.title;
+      page.notesIn = this.notesIn;
+      this.updatePage(page);
+    }, 500)
   },
   computed: {
     dragOptions() {
@@ -262,9 +317,12 @@ export default {
         ghostClass: "blue-background-class"
       };
     },
-    ...mapGetters("note", ["getDemoPage"]),
+    ...mapGetters("note", ["getPage"]),
     cardRefs() {
       return this.$refs.cards;
+    },
+    page() {
+      return this.getPage(this.$route.params.id);
     }
   }
 };
@@ -306,7 +364,7 @@ export default {
   /* width: 100px !important; */
   padding: 10px;
 }
-#demoBreadCrumb {
+#pageBreadCrumb {
   margin-top: 120px;
   margin-bottom: -30px;
   width: 75%;

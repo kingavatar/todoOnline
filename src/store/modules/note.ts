@@ -1,37 +1,37 @@
 import { MutationTree, GetterTree, ActionTree } from "vuex";
-import {
-  NoteState,
-  RootState,
-  TodoCard,
-  TodoCards,
-  Todos,
-  Todo
-} from "@/types";
+import { PageState, RootState, Page, Pages, Notes, Note } from "@/types";
+import axios from "axios";
+import store from "..";
 
-const noteState: NoteState = {
-  todos: [
+const noteState: PageState = {
+  pages: [
     {
-      id: "fb658d57-4653-4876-89b3-80ff9f60e3d6",
+      _id: "fb658d57-4653-4876-89b3-80ff9f60e3d6",
       title: "Hey there 👋",
-      todoList: [
+      pageLink: "",
+      ownerId: "",
+      notesIn: [
         {
-          id: "76805351-0a16-48db-b2fb-cfd93aafb6f9",
-          text:
+          _id: "76805351-0a16-48db-b2fb-cfd93aafb6f9",
+          ownerId: "",
+          content:
             "Todo Online is an awesome free online to-do list app that helps you to create a to-do list with some extra features.",
           checked: false,
           priority: 0,
           imgList: []
         },
         {
-          id: "0cc0bc65-7bf1-43ef-a374-8fb59f5ad70a",
-          text: "Some Cool Features 💫 listed below",
+          _id: "0cc0bc65-7bf1-43ef-a374-8fb59f5ad70a",
+          ownerId: "",
+          content: "Some Cool Features 💫 listed below",
           checked: false,
           priority: 0,
           imgList: []
         },
         {
-          id: "93be6ff8-516e-48f6-a37e-e1dfece3ebf9",
-          text:
+          _id: "93be6ff8-516e-48f6-a37e-e1dfece3ebf9",
+          ownerId: "",
+          content:
             "<b>Text</b> can be <i> Styled </i> using <u>inline</u> Toolbar <strike> which </strike> pops <b><i><u><strike>up when text </strike> </u></i></b> is highlighted.",
           checked: false,
           priority: 0,
@@ -40,8 +40,9 @@ const noteState: NoteState = {
           ]
         },
         {
-          id: "a76a6bed-e1f3-400c-85c1-0483d37c7b18",
-          text:
+          _id: "a76a6bed-e1f3-400c-85c1-0483d37c7b18",
+          ownerId: "",
+          content:
             "You can sort the todo list by dragging the Card using the handle at left of card.",
           checked: false,
           priority: 0,
@@ -51,44 +52,50 @@ const noteState: NoteState = {
         },
 
         {
-          id: "927796a1-6f41-41e1-8902-9a4baaaac24c",
-          text:
+          _id: "927796a1-6f41-41e1-8902-9a4baaaac24c",
+          ownerId: "",
+          content:
             "You can set card Priorities by selecting it from the menu on the right side of the card",
           checked: true,
           priority: 0,
           imgList: []
         },
         {
-          id: "2e11b173-f1ed-4c46-a1ec-f9d7dba713e5",
-          text: "High Priority Card",
+          _id: "2e11b173-f1ed-4c46-a1ec-f9d7dba713e5",
+          ownerId: "",
+          content: "High Priority Card",
           checked: true,
           priority: 1,
           imgList: []
         },
         {
-          id: "4f187b22-3dce-4500-ae16-b187e5749003",
-          text: "Medium Priority Card",
+          _id: "4f187b22-3dce-4500-ae16-b187e5749003",
+          ownerId: "",
+          content: "Medium Priority Card",
           checked: false,
           priority: 2,
           imgList: []
         },
         {
-          id: "9edea000-57a7-42f0-a4e7-812223ff28f1",
-          text: "Normal Priority Card",
+          _id: "9edea000-57a7-42f0-a4e7-812223ff28f1",
+          ownerId: "",
+          content: "Normal Priority Card",
           checked: true,
           priority: 3,
           imgList: []
         },
         {
-          id: "c3da25f1-0985-4bd3-9744-83124f4eb2eb",
-          text: "Low Priority Card",
+          _id: "c3da25f1-0985-4bd3-9744-83124f4eb2eb",
+          ownerId: "",
+          content: "Low Priority Card",
           checked: false,
           priority: 4,
           imgList: []
         },
         {
-          id: "14d91ce4-afa1-4a24-ae91-55f9f8ffbdd9",
-          text:
+          _id: "14d91ce4-afa1-4a24-ae91-55f9f8ffbdd9",
+          ownerId: "",
+          content:
             "You can embed images by simply pasting the image using Ctrl+v or Cmd+v or drop them directly.",
           checked: false,
           priority: 0,
@@ -97,24 +104,27 @@ const noteState: NoteState = {
           ]
         },
         {
-          id: "81d016a2-be01-457a-bed5-54959bec8fd9",
-          text:
+          _id: "81d016a2-be01-457a-bed5-54959bec8fd9",
+          ownerId: "",
+          content:
             "Can embed youtube videos in text https://www.youtube.com/watch?v=ScMzIvxBSi4 Place a video link in text with spaces",
           checked: true,
           priority: 0,
           imgList: []
         },
         {
-          id: "08b6c69e-ed4d-41a5-979b-903d6723d3b9",
-          text:
+          _id: "08b6c69e-ed4d-41a5-979b-903d6723d3b9",
+          ownerId: "",
+          content:
             'You can add a new card by using ➕ button or Pressing "Enter" Key',
           checked: true,
           priority: 0,
           imgList: []
         },
         {
-          id: "e4edca36-9814-49dc-a791-f772aa1dda58",
-          text:
+          _id: "e4edca36-9814-49dc-a791-f772aa1dda58",
+          ownerId: "",
+          content:
             'You can delete a card by using delete option in menu or Pressing "Delete" Key',
           checked: false,
           priority: 0,
@@ -123,8 +133,9 @@ const noteState: NoteState = {
           ]
         },
         {
-          id: "fe298e13-8cae-4290-b639-2dac9dbd389f",
-          text: "You can copy a card by using Copy option in menu",
+          _id: "fe298e13-8cae-4290-b639-2dac9dbd389f",
+          ownerId: "",
+          content: "You can copy a card by using Copy option in menu",
           checked: true,
           priority: 0,
           imgList: [
@@ -136,53 +147,162 @@ const noteState: NoteState = {
   ]
 };
 
-const noteGetters: GetterTree<NoteState, RootState> = {
-  getTodoCards(state): TodoCards {
-    return state.todos;
+const noteGetters: GetterTree<PageState, RootState> = {
+  getPages(state): Pages {
+    return state.pages;
   },
-  getDemoTodoCard(state): TodoCard | undefined {
-    return state.todos.find(
-      i => i.id === "fb658d57-4653-4876-89b3-80ff9f60e3d6"
+  getDemoPage(state): Page | undefined {
+    return state.pages.find(
+      i => i._id === "fb658d57-4653-4876-89b3-80ff9f60e3d6"
     );
   },
+  getPage: state => (id: string) =>
+    state.pages.find(i => {
+      return i._id === id;
+    }),
   totalTasks(state, id: string): number {
-    const todoCard = state.todos.find(i => i.id === id);
-    if (todoCard !== undefined) {
-      return todoCard.todoList.length;
+    const page = state.pages.find(i => i._id === id);
+    if (page !== undefined) {
+      return page.notesIn.length;
     }
     return -1;
   },
-  getTodos(state, id): Todos | undefined {
-    const todoCard = state.todos.find(i => i.id === id);
+  getNotes(state, id): Notes | undefined {
+    const todoCard = state.pages.find(i => i._id === id);
     if (todoCard !== undefined) {
-      return todoCard.todoList;
+      return todoCard.notesIn;
     }
     return undefined;
   },
   totalDoneTasks: (state, getters) => {
-    return getters.getTodos.filter((i: Todo) => i.checked === true).length;
+    return getters.getTodos.filter((i: Note) => i.checked === true).length;
   },
-  latestTodoCard(state): TodoCard {
-    return state.todos.slice(-1)[0];
+  latestNote(state): Page {
+    return state.pages.slice(-1)[0];
   }
 };
 
-const mutations: MutationTree<NoteState> = {
-  addTodoCard(state, todoCard: TodoCard) {
-    state.todos.push(todoCard);
+const mutations: MutationTree<PageState> = {
+  addPage(state, page: Page) {
+    if (state.pages.find(i => i._id === page._id)) {
+      state.pages.splice(
+        state.pages.findIndex(i => i._id === page._id),
+        1,
+        page
+      );
+    } else {
+      state.pages.push(page);
+    }
   },
-  deleteTodoCard(state, id: string) {
-    const search = state.todos.filter(i => i.id !== id);
-    state.todos = search;
+  deletePage(state, id: string) {
+    const search = state.pages.filter(i => i._id !== id);
+    state.pages = search;
+  },
+  updatePage(state, page: Page) {
+    // const idx = ;
+    // state.pages[idx].title = page.title;
+    // state.pages[idx].notesIn = page.notesIn;
+    state.pages.splice(
+      state.pages.findIndex(i => i._id === page._id),
+      1,
+      page
+    );
   }
 };
 
-const actions: ActionTree<NoteState, RootState> = {
-  updateTodos(contex, todoCard: TodoCard) {
-    contex.commit("addTodoCard", todoCard);
+const actions: ActionTree<PageState, RootState> = {
+  addPage(context) {
+    // axios.defaults.withCredentials = true;
+    axios.defaults.headers.common["authorization"] = store.state.auth.token;
+
+    axios
+      .post(
+        "http://localhost:3000/api/page/add"
+        // { withCredentials: true }
+      )
+      .then(resp => {
+        const page = resp.data;
+        context.commit("addPage", page);
+      })
+      .catch(err => console.log(err));
   },
-  deleteTodos(contex, id: string) {
-    contex.commit("deleteTodoCard", id);
+  deletePage(context, id: string) {
+    axios.defaults.headers.common["authorization"] = store.state.auth.token;
+
+    axios
+      .delete(
+        "http://localhost:3000/api/page/" + id
+        //  { withCredentials: true }
+      )
+      .then(resp => {
+        // const page = resp.data.page;
+        // console.log(page,resp.data);
+        context.commit("deletePage", id);
+      })
+      .catch(err => console.log(err));
+  },
+  updatePage(context, page) {
+    axios.defaults.headers.common["authorization"] = store.state.auth.token;
+
+    // axios.defaults.withCredentials = true;
+    axios
+      .put(
+        "http://localhost:3000/api/page/" + page._id,
+        page
+        // { withCredentials: true }
+      )
+      .then(resp => {
+        // console.log(resp);
+        context.commit("updatePage", page);
+      })
+      .catch(err => console.log(err));
+  },
+  getPages(context) {
+    axios.defaults.headers.common["authorization"] = store.state.auth.token;
+
+    axios
+      .get(
+        "http://localhost:3000/api/page"
+        // { withCredentials: true }
+      )
+      .then(resp => {
+        const pages = resp.data.pages;
+
+        pages.forEach((element: Page) => {
+          context.commit("addPage", element);
+        });
+      })
+      .catch(err => console.log(err));
+  },
+  getPage(context, id) {
+    axios.defaults.headers.common["authorization"] = store.state.auth.token;
+
+    axios
+      .get(
+        "http://localhost:3000/api/page/" + id
+        //  { withCredentials: true }
+      )
+      .then(resp => {
+        const page = resp.data.page;
+        // console.log(page,resp.data);
+        context.commit("addPage", page);
+      })
+      .catch(err => console.log(err));
+  },
+  copyPage(context, id) {
+    // axios.defaults.withCredentials = true;
+    axios.defaults.headers.common["authorization"] = store.state.auth.token;
+
+    axios
+      .post(
+        "http://localhost:3000/api/page/copy/" + id
+        // { withCredentials: true }
+      )
+      .then(resp => {
+        const page = resp.data;
+        context.commit("addPage", page);
+      })
+      .catch(err => console.log(err));
   }
 };
 

@@ -1,7 +1,9 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Demo from "../views/Demo.vue";
+import Page from "../views/Page.vue";
 import store from "../store";
+// import axios from "axios";
 
 Vue.use(VueRouter);
 
@@ -14,6 +16,14 @@ const routes: Array<RouteConfig> = [
     path: "/getting-started",
     name: "Demo",
     component: Demo,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/Page/:id",
+    name: "Page",
+    component: Page,
     meta: {
       requiresAuth: true
     }
@@ -57,7 +67,7 @@ const router = new VueRouter({
 });
 
 export default router;
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.getters["auth/isLoggedIn"]) {
       next();

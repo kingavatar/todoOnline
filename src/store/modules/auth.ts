@@ -6,11 +6,26 @@ import router from "../../router";
 const authState: AuthState = {
   status: "",
   token: localStorage.getItem("token") || "",
+  // isLoggedIn:false,
   user: {}
 };
 
 const authGetters: GetterTree<AuthState, RootState> = {
   isLoggedIn: state => !!state.token,
+  // return new Promise((resolve, reject) => {
+  // delete axios.defaults.headers.common['authorization']
+  // axios({ url: "http://localhost:3000/auth/authStatus", method: "GET" })
+  //   .then(resp => {
+  //     console.log(resp.data);
+  //     return resp.data;
+  //     // resolve(resp);
+  //   })
+  //   .catch(err => {
+  //     return false;
+  //     // reject(err);
+  //   });
+  // });
+
   authStatus: state => state.status
 };
 
@@ -20,7 +35,7 @@ export type Mutations<S = AuthState> = {
     state: S,
     { token, user }: { token: string; user: Record<string, any> }
   ): void;
-  setToken(state:S):void;
+  setToken(state: S, token: string): void;
   authError(state: S): void;
   logout(state: S): void;
 };
@@ -32,10 +47,11 @@ const mutations: MutationTree<AuthState> & Mutations = {
   authSuccess(state, { token, user }) {
     state.status = "success";
     state.token = token;
+    // state.isLoggedIn=true;
     state.user = user;
   },
-  setToken(state){
-    state.token="demo";
+  setToken(state, token) {
+    state.token = token;
   },
   authError(state) {
     state.status = "error";
@@ -51,20 +67,22 @@ const actions: ActionTree<AuthState, RootState> = {
   async login({ commit }, user) {
     return new Promise((resolve, reject) => {
       commit("authRequest");
-      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+      // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "http://localhost:8080/*";
       axios({
-        url: "http://localhost:3000/auth/signin",
+        url: "http://localhost:3000/api/auth/signin",
         data: user,
         method: "POST"
+        // withCredentials: true
       })
         .then(resp => {
           // const token = resp.data.token
-          const token = "demo";
+          const token = resp.data.token;
           const user = resp.data.user;
           localStorage.setItem("token", token);
-          // axios.defaults.headers.common['Authorization'] = token
-          commit("authSuccess", token, user);
-          commit("setToken");
+          axios.defaults.headers.common["authorization"] = token;
+          commit("authSuccess", { token, user });
+          console.log(user);
+          commit("setToken", token);
           resolve(resp);
         })
         .catch(err => {
@@ -79,18 +97,19 @@ const actions: ActionTree<AuthState, RootState> = {
   signup({ commit }, user) {
     return new Promise((resolve, reject) => {
       commit("authRequest");
-      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+      // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "http://localhost:8080/";
       axios({
-        url: "http://localhost:3000/auth/signup",
+        url: "http://localhost:3000/api/auth/signup",
         data: user,
         method: "POST"
       })
         .then(resp => {
           const user = resp.data.user;
-          const token = "demo";
+          const token = resp.data.token;
           localStorage.setItem("token", token);
-          // axios.defaults.headers.common['Authorization'] = token
-          commit("authSuccess", token, user);
+          axios.defaults.headers.common["authorization"] = token;
+          commit("authSuccess", { token, user });
+          commit("setToken", token);
           resolve(resp);
         })
         .catch(err => {
@@ -111,7 +130,7 @@ const actions: ActionTree<AuthState, RootState> = {
   //         const token = resp.data.token
   //         const user = resp.data.user
   //         localStorage.setItem('token', token)
-  //         axios.defaults.headers.common['Authorization'] = token
+  //         axios.defaults.headers.common['authorization'] = token
   //         commit('auth_success', token, user)
   //         resolve(resp)
   //       })
@@ -124,8 +143,8 @@ const actions: ActionTree<AuthState, RootState> = {
   // },
   logout({ commit }) {
     return new Promise((resolve, reject) => {
-      // delete axios.defaults.headers.common['Authorization']
-      axios({ url: "http://localhost:3000/auth/logout", method: "GET" })
+      delete axios.defaults.headers.common["authorization"];
+      axios({ url: "http://localhost:3000/api/auth/logout", method: "GET" })
         .then(resp => {
           commit("logout");
           localStorage.removeItem("token");

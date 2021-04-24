@@ -2,7 +2,8 @@ module.exports = {
   configureWebpack: {
     devtool: "source-map"
   },
-  publicPath: process.env.NODE_ENV === "production" ? "/todoOnline/" : "/",
+  // publicPath: process.env.NODE_ENV === "production" ? "/todoOnline/" : "/",
+  assetsDir: "static",
   chainWebpack: config => {
     config.module
       .rule("vue")

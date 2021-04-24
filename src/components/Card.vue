@@ -23,7 +23,7 @@
         v-bind:class="classCheckboxPriority"
         class="box-fix"
         v-model="todo.checked"
-        :disabled="todo.text == '' ? (todo.checked = false) || true : false"
+        :disabled="todo.content == '' ? (todo.checked = false) || true : false"
       />
       <!-- value="1" -->
       <input
@@ -31,7 +31,7 @@
         type="checkbox"
         class="box-fix"
         v-model="todo.checked"
-        :disabled="todo.text == '' ? (todo.checked = false) || true : false"
+        :disabled="todo.content == '' ? (todo.checked = false) || true : false"
       />
       <!-- <b-card-text
       contenteditable="true"
@@ -57,7 +57,7 @@
         @focusout="$emit('toggleFocus', false)"
         @input="updateTodoText"
       ></span>
-      <!-- v-text="todo.text" -->
+      <!-- v-text="todo.content" -->
       <!-- </b-form-input> -->
       <!-- :class="{ triggered: showEmojiPicker }" -->
       <span
@@ -409,10 +409,12 @@ import * as linkify from "linkifyjs";
 })
 export default class Card extends Vue {
   @Prop() private todo!: {
-    id: string;
-    text: string;
+    _id: string;
+    content: string;
     checked: boolean;
     priority: number;
+    ownerId: string;
+    pageId: string;
     imgList: Array<string | ArrayBuffer>;
   };
   @Prop() private inputFocus!: string;
@@ -422,7 +424,7 @@ export default class Card extends Vue {
   private checkEmpty = true;
 
   mounted() {
-    this.todoInput.innerHTML = this.todo.text;
+    this.todoInput.innerHTML = this.todo.content;
     this.todo.imgList.forEach(ele => {
       const urlCreator = window.URL || window.webkitURL;
       // console.log(ele);
@@ -451,15 +453,15 @@ export default class Card extends Vue {
       this.checkEmpty = true;
   }
   updateTodoText(event: Event) {
-    this.todo.text = (event.target as HTMLSpanElement).innerHTML;
-    if (this.todo.text.length > 0) {
+    this.todo.content = (event.target as HTMLSpanElement).innerHTML;
+    if (this.todo.content.length > 0) {
       this.checkEmpty = false;
     }
     // .replace(
     //   /\n/g,
     //   ""
     // );
-    // (event.target as HTMLDivElement).innerText = this.todo.text;
+    // (event.target as HTMLDivElement).innerText = this.todo.content;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -566,7 +568,7 @@ export default class Card extends Vue {
   }
   get linkifiedText() {
     this.embedList.splice(0);
-    linkify.find(this.todo.text).forEach(ele => {
+    linkify.find(this.todo.content).forEach(ele => {
       if (this.youtubeRegex().test(ele.value)) {
         this.embedList.push({
           url: ele.value.replace(/watch\?v=/gi, "embed/")
@@ -576,8 +578,8 @@ export default class Card extends Vue {
     // const options = {
     //   /* … */
     // };
-    // linkifyElement(document.getElementById("id"), options, document);
-    return this.todo.text;
+    // linkifyElement(document.getElementById("_id"), options, document);
+    return this.todo.content;
   }
 
   youtubeRegex() {

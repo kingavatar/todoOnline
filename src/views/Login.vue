@@ -66,7 +66,7 @@
 <script>
 import Vue from "vue";
 import { mapGetters } from "vuex";
-import store from '../store'
+import store from "../store";
 export default Vue.extend({
   name: "Login",
   data: function() {
@@ -79,11 +79,11 @@ export default Vue.extend({
     };
   },
   methods: {
-     onSubmit(event) {
+    onSubmit(event) {
       event.preventDefault();
       this.$store
         .dispatch("auth/login", this.form)
-        .then(() =>this.$router.push("/"))
+        .then(() => this.$router.push("/"))
         .catch(err => console.log(err));
     },
     onReset(event) {
@@ -118,11 +118,10 @@ export default Vue.extend({
     },
     ...mapGetters(["auth/isLoggedIn"])
   },
-  beforeRouteEnter(to,from,next){
-    if(store.getters["auth/isLoggedIn"]){
+  beforeRouteEnter(to, from, next) {
+    if (store.getters["auth/isLoggedIn"]) {
       next("/dashboard");
-    }
-    else{
+    } else {
       next();
     }
   }
