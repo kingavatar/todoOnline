@@ -4,7 +4,17 @@
       about
     </div>
     <b-row
-      v-if="isLoggedIn"
+      v-if="this.$route.name === 'PageNotFound' || this.$route.name === 'InternalServerError'"
+      align-h="end"
+      style="margin-right:40px;"
+      class="mt-4"
+    >
+      <b-button variant="outline-info" href="/"
+        ><b-icon icon="door-closed" /> Go Home</b-button
+      >
+    </b-row>
+    <b-row
+      v-else-if="isLoggedIn"
       align-h="end"
       style="margin-right:40px;"
       class="mt-4"

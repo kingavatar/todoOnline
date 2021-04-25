@@ -88,6 +88,17 @@ const actions: ActionTree<AuthState, RootState> = {
         .catch(err => {
           commit("authError");
           localStorage.removeItem("token");
+          if (err.response != undefined) {
+            if (err.response.status === 500) {
+              router.push("/500");
+            }
+            else if (err.response.status === 404) {
+              router.push("/404");
+            }
+            else {
+              console.log(err);
+            }
+          }
           reject(err);
         });
     });
@@ -115,6 +126,17 @@ const actions: ActionTree<AuthState, RootState> = {
         .catch(err => {
           commit("authError");
           localStorage.removeItem("token");
+          if (err.response != undefined) {
+            if (err.response.status === 500) {
+              router.push("/500");
+            }
+            else if (err.response.status === 404) {
+              router.push("/404");
+            }
+            else {
+              console.log(err);
+            }
+          }
           reject(err);
         });
     });
@@ -152,6 +174,17 @@ const actions: ActionTree<AuthState, RootState> = {
         })
         .catch(err => {
           commit("authError", err);
+          if (err.response != undefined) {
+            if (err.response.status === 500) {
+              router.push("/500");
+            }
+            else if (err.response.status === 404) {
+              router.push("/404");
+            }
+            else {
+              console.log(err);
+            }
+          }
           reject(err);
         });
     });

@@ -3,7 +3,6 @@ import VueRouter, { RouteConfig } from "vue-router";
 import Demo from "../views/Demo.vue";
 import Page from "../views/Page.vue";
 import store from "../store";
-// import axios from "axios";
 
 Vue.use(VueRouter);
 
@@ -57,7 +56,17 @@ const routes: Array<RouteConfig> = [
     meta: {
       requiresAuth: true
     }
-  }
+  },
+  {
+    path: "/500",
+    name: "InternalServerError",
+    component: () => import(/* webpackChunkName: "about" */ "../views/500.vue")
+  },
+  {
+    path: "*",
+    name: "PageNotFound",
+    component: () => import(/* webpackChunkName: "about" */ "../views/404.vue")
+  },
 ];
 
 const router = new VueRouter({

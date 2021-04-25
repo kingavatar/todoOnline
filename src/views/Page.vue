@@ -160,7 +160,17 @@ export default {
             this.notesIn = notes;
           })
           .catch(err => {
+            if (err.response != undefined) {
+          if (err.response.status === 500) {
+            this.$router.push("/500");
+          }
+          else if (err.response.status === 404) {
+            this.$router.push("/404");
+          }
+          else {
             console.log(err);
+          }
+        }
             this.notesIn = [];
           });
       } else {
