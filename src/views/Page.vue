@@ -88,6 +88,7 @@
           @addCard="addCardIndex(index)"
           @toggleEmojiPicker="toggleEmojiPicker(note._id)"
           @toggleFocus="toggleinputFocus"
+          @savePage="debouncedSavePage"
           ref="cards"
         />
         <!-- <Card todoText="Something 2"/>
@@ -161,16 +162,14 @@ export default {
           })
           .catch(err => {
             if (err.response != undefined) {
-          if (err.response.status === 500) {
-            this.$router.push("/500");
-          }
-          else if (err.response.status === 404) {
-            this.$router.push("/404");
-          }
-          else {
-            console.log(err);
-          }
-        }
+              if (err.response.status === 500) {
+                this.$router.push("/500");
+              } else if (err.response.status === 404) {
+                this.$router.push("/404");
+              } else {
+                console.log(err);
+              }
+            }
             this.notesIn = [];
           });
       } else {
@@ -231,6 +230,7 @@ export default {
     },
     toggleinputFocus(value) {
       this.istodoInputfocused = value;
+      this.debouncedSavePage();
     },
     toggleEmojiPicker(id) {
       let sel, range;

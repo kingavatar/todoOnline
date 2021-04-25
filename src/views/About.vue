@@ -4,7 +4,11 @@
       about
     </div>
     <b-row
-      v-if="this.$route.name === 'PageNotFound' || this.$route.name === 'InternalServerError'"
+      v-if="
+        this.$route.name === 'PageNotFound' ||
+          this.$route.name === 'InternalServerError' ||
+          this.$route.name === 'RedirectPage'
+      "
       align-h="end"
       style="margin-right:40px;"
       class="mt-4"

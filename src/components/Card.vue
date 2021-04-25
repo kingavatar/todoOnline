@@ -457,6 +457,7 @@ export default class Card extends Vue {
     if (this.todo.content.length > 0) {
       this.checkEmpty = false;
     }
+    this.$emit("savePage");
     // .replace(
     //   /\n/g,
     //   ""
@@ -539,6 +540,8 @@ export default class Card extends Vue {
       reader.readAsDataURL(blob);
 
       this.imgList.push({ url: imageUrl });
+      this.$emit("savePage");
+
       // (this.$refs.myimg as HTMLImageElement).src = imageUrl;
       // this.embedList.push({ url: imageUrl });
     }

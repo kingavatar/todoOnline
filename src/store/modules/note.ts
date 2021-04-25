@@ -2,7 +2,7 @@ import { MutationTree, GetterTree, ActionTree } from "vuex";
 import { PageState, RootState, Page, Pages, Notes, Note } from "@/types";
 import axios from "axios";
 import store from "..";
-import router from "../../router"
+import router from "../../router";
 const noteState: PageState = {
   pages: [
     {
@@ -228,14 +228,13 @@ const actions: ActionTree<PageState, RootState> = {
         if (err.response != undefined) {
           if (err.response.status === 500) {
             router.push("/500");
-          }
-          else if (err.response.status === 404) {
+          } else if (err.response.status === 404) {
             router.push("/404");
-          }
-          else{
+          } else {
             console.log(err);
           }
-        }});
+        }
+      });
   },
   deletePage(context, id: string) {
     axios.defaults.headers.common["authorization"] = store.state.auth.token;
@@ -254,14 +253,13 @@ const actions: ActionTree<PageState, RootState> = {
         if (err.response != undefined) {
           if (err.response.status === 500) {
             router.push("/500");
-          }
-          else if (err.response.status === 404) {
+          } else if (err.response.status === 404) {
             router.push("/404");
-          }
-          else {
+          } else {
             console.log(err);
           }
-        }});
+        }
+      });
   },
   updatePage(context, page) {
     axios.defaults.headers.common["authorization"] = store.state.auth.token;
@@ -281,14 +279,13 @@ const actions: ActionTree<PageState, RootState> = {
         if (err.response != undefined) {
           if (err.response.status === 500) {
             router.push("/500");
-          }
-          else if (err.response.status === 404) {
+          } else if (err.response.status === 404) {
             router.push("/404");
-          }
-          else {
+          } else {
             console.log(err);
           }
-        }});
+        }
+      });
   },
   getPages(context) {
     axios.defaults.headers.common["authorization"] = store.state.auth.token;
@@ -306,18 +303,16 @@ const actions: ActionTree<PageState, RootState> = {
         });
       })
       .catch(err => {
-        if(err.response!=undefined){
-        if(err.response.status===500){
+        if (err.response != undefined) {
+          if (err.response.status === 500) {
             router.push("/500");
+          } else if (err.response.status === 404) {
+            router.push("/404");
+          } else {
+            console.log(err);
+          }
         }
-        else if(err.response.status===404){
-          router.push("/404");
-        }
-        else {
-          console.log(err);
-        }
-        }
-        });
+      });
   },
   getPage(context, id) {
     axios.defaults.headers.common["authorization"] = store.state.auth.token;
@@ -336,14 +331,13 @@ const actions: ActionTree<PageState, RootState> = {
         if (err.response != undefined) {
           if (err.response.status === 500) {
             router.push("/500");
-          }
-          else if (err.response.status === 404) {
+          } else if (err.response.status === 404) {
             router.push("/404");
-          }
-          else {
+          } else {
             console.log(err);
           }
-        }});
+        }
+      });
   },
   copyPage(context, id) {
     // axios.defaults.withCredentials = true;
@@ -362,14 +356,13 @@ const actions: ActionTree<PageState, RootState> = {
         if (err.response != undefined) {
           if (err.response.status === 500) {
             router.push("/500");
-          }
-          else if (err.response.status === 404) {
+          } else if (err.response.status === 404) {
             router.push("/404");
-          }
-          else {
+          } else {
             console.log(err);
           }
-        }});
+        }
+      });
   }
 };
 

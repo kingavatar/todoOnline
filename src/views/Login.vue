@@ -50,6 +50,22 @@
                 emoji.
               </b-form-text>
             </b-form-group>
+            <p class="text-center" style="padding-top:30px;">
+              Or Sign in using One of these
+            </p>
+            <b-row align-h="between" class="w-50">
+              <b-button variant="outline-danger" href="/api/auth/google"
+                ><b-icon icon="google"
+              /></b-button>
+              <b-button
+                variant="outline-primary"
+                href="/api/auth/facebook"
+                ><b-icon icon="facebook"
+              /></b-button>
+              <b-button variant="outline-dark" href="/api/auth/github"
+                ><b-icon icon="github"
+              /></b-button>
+            </b-row>
             <b-row align-h="around" style="padding-top:30px;">
               <b-button type="reset" variant="danger">Reset</b-button>
               <b-button type="submit" variant="primary">
@@ -65,7 +81,7 @@
 
 <script>
 import Vue from "vue";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import store from "../store";
 export default Vue.extend({
   name: "Login",
@@ -95,7 +111,8 @@ export default Vue.extend({
       this.$nextTick(() => {
         this.show = true;
       });
-    }
+    },
+    // ...mapActions({ oauthLogin: "auth/oauthLogin" })
   },
   // mounted() {},
   computed: {

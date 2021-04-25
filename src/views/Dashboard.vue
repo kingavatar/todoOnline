@@ -41,13 +41,14 @@
               <b-row align-h="between">
                 <b-row align-h="start" align-v="center">
                   <b-icon icon="file-earmark" class="mr-2" />
-                  {{ card.title }}
+                  {{ card._id==='fb658d57-4653-4876-89b3-80ff9f60e3d6'? 'Getting Started' :card.title }}
                 </b-row>
                 <b-col>
                   <b-dropdown
                     variant="link"
                     toggle-class="text-decoration-none"
                     no-caret
+                    v-if="card._id!=='fb658d57-4653-4876-89b3-80ff9f60e3d6'"
                   >
                     <template #button-content>
                       <b-icon icon="three-dots-vertical" />

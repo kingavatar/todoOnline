@@ -63,10 +63,20 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "about" */ "../views/500.vue")
   },
   {
+    path: "/redirect",
+    name: "RedirectPage",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../components/RedirectPage.vue")
+  },
+  // {
+  //   path: "/api/auth/google/callback*",
+  //   redirect: "/redirect"
+  // },
+  {
     path: "*",
     name: "PageNotFound",
     component: () => import(/* webpackChunkName: "about" */ "../views/404.vue")
-  },
+  }
 ];
 
 const router = new VueRouter({

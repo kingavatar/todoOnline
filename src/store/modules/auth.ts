@@ -91,11 +91,49 @@ const actions: ActionTree<AuthState, RootState> = {
           if (err.response != undefined) {
             if (err.response.status === 500) {
               router.push("/500");
-            }
-            else if (err.response.status === 404) {
+            } else if (err.response.status === 404) {
               router.push("/404");
+            } else {
+              console.log(err);
             }
-            else {
+          }
+          reject(err);
+        });
+    });
+    // const token = "demo";
+    // return commit("authSuccess", { token, user });
+  },
+  async oauthLogin({ commit },token) {
+    return new Promise((resolve, reject) => {
+      commit("authRequest");
+      axios.defaults.headers.common["authorization"] = token;
+      axios({
+        url: "http://localhost:3000/api/auth/social",
+        data: token,
+        method: "GET"
+        // withCredentials: true
+      })
+        .then(resp => {
+          // const token = resp.data.token
+          console.log(resp.data);
+          // const token = resp.data.token;
+          const user = resp.data;
+          localStorage.setItem("token", token);
+          axios.defaults.headers.common["authorization"] = token;
+          commit("authSuccess", { token, user });
+          console.log(user);
+          commit("setToken", token);
+          resolve(resp);
+        })
+        .catch(err => {
+          commit("authError");
+          localStorage.removeItem("token");
+          if (err.response != undefined) {
+            if (err.response.status === 500) {
+              router.push("/500");
+            } else if (err.response.status === 404) {
+              router.push("/404");
+            } else {
               console.log(err);
             }
           }
@@ -129,11 +167,9 @@ const actions: ActionTree<AuthState, RootState> = {
           if (err.response != undefined) {
             if (err.response.status === 500) {
               router.push("/500");
-            }
-            else if (err.response.status === 404) {
+            } else if (err.response.status === 404) {
               router.push("/404");
-            }
-            else {
+            } else {
               console.log(err);
             }
           }
@@ -177,11 +213,9 @@ const actions: ActionTree<AuthState, RootState> = {
           if (err.response != undefined) {
             if (err.response.status === 500) {
               router.push("/500");
-            }
-            else if (err.response.status === 404) {
+            } else if (err.response.status === 404) {
               router.push("/404");
-            }
-            else {
+            } else {
               console.log(err);
             }
           }
