@@ -16,7 +16,6 @@ const authGetters: GetterTree<AuthState, RootState> = {
   // delete axios.defaults.headers.common['authorization']
   // axios({ url: "http://localhost:3000/auth/authStatus", method: "GET" })
   //   .then(resp => {
-  //     console.log(resp.data);
   //     return resp.data;
   //     // resolve(resp);
   //   })
@@ -81,7 +80,6 @@ const actions: ActionTree<AuthState, RootState> = {
           localStorage.setItem("token", token);
           axios.defaults.headers.common["authorization"] = token;
           commit("authSuccess", { token, user });
-          console.log(user);
           commit("setToken", token);
           resolve(resp);
         })
@@ -115,13 +113,10 @@ const actions: ActionTree<AuthState, RootState> = {
       })
         .then(resp => {
           // const token = resp.data.token
-          console.log(resp.data);
-          // const token = resp.data.token;
           const user = resp.data;
           localStorage.setItem("token", token);
           axios.defaults.headers.common["authorization"] = token;
           commit("authSuccess", { token, user });
-          console.log(user);
           commit("setToken", token);
           resolve(resp);
         })

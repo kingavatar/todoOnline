@@ -132,7 +132,7 @@ export default {
       items: [
         {
           text: "Dashboard",
-          href: "/dashboard"
+          to: "/dashboard"
         },
         {
           text: "",
@@ -141,44 +141,59 @@ export default {
       ]
     };
   },
+  created(){
+    this.debouncedSavePage = debounce(this.savePage,90000);
+    this.fastdebouncedSavePage = debounce(this.savePage,300);
+     window.addEventListener('beforeunload', this.savePage);
+    
+  },
   async mounted() {
+
     await this.getPageSrv(this.$route.params.id);
     this.title = (" " + this.page.title).slice(1);
     const notesIn = [...this.page.notesIn];
-    if (notesIn.length > 0) {
-      if (typeof notesIn[0] === "string") {
-        axios.defaults.headers.common[
-          "authorization"
-        ] = this.$store.state.auth.token;
-        axios
-          .get(
-            "http://localhost:3000/api/note/page/" + this.$route.params.id
-            //  { withCredentials: true }
-          )
-          .then(resp => {
-            const notes = resp.data;
-            // console.log(page,resp.data);
-            this.notesIn = notes;
-          })
-          .catch(err => {
-            if (err.response != undefined) {
-              if (err.response.status === 500) {
-                this.$router.push("/500");
-              } else if (err.response.status === 404) {
-                this.$router.push("/404");
-              } else {
-                console.log(err);
-              }
-            }
-            this.notesIn = [];
-          });
-      } else {
-        this.notesIn = notesIn;
-      }
-    }
+    this.notesIn = notesIn;
+    // if (notesIn.length > 0) {
+    //   if (typeof notesIn[0] === "string") {
+    //     axios.defaults.headers.common[
+    //       "authorization"
+    //     ] = this.$store.state.auth.token;
+    //     axios
+    //       .get(
+    //         "http://localhost:3000/api/note/page/" + this.$route.params.id
+    //         //  { withCredentials: true }
+    //       )
+    //       .then(resp => {
+    //         const notes = resp.data;
+
+    //         this.notesIn = notes;
+    //       })
+    //       .catch(err => {
+    //         if (err.response != undefined) {
+    //           if (err.response.status === 500) {
+    //             this.$router.push("/500");
+    //           } else if (err.response.status === 404) {
+    //             this.$router.push("/404");
+    //           } else {
+    //             this.notesIn = [];
+    //           }
+    //         }
+    //       });
+    //   } else {
+    //     this.notesIn = notesIn;
+    //   }
+    // }
     this.items.find(i =>
       Object.prototype.hasOwnProperty.call(i, "active")
     ).text = this.title;
+  },
+  beforeDestroy(){
+    // this.savePage();
+    window.removeEventListener('beforeunload', this.savePage);
+  },
+  beforeRouteLeave(to, from, next){
+    this.savePage();
+    next();
   },
   methods: {
     addCard() {
@@ -223,14 +238,14 @@ export default {
       this.notesIn.forEach(ele => {
         ele.checked = false;
       });
-      console.log(
-        this.$refs.cards.find(i => i.$props.todo._id === this.currentIdx)
-          .todoInput.innerHTML
-      );
+      // console.log(
+      //   this.$refs.cards.find(i => i.$props.todo._id === this.currentIdx)
+      //     .todoInput.innerHTML
+      // );
     },
     toggleinputFocus(value) {
       this.istodoInputfocused = value;
-      this.debouncedSavePage();
+      this.debouncedSavePage(this.page,this.title,this.notesIn,this.updatePage);
     },
     toggleEmojiPicker(id) {
       let sel, range;
@@ -304,9 +319,9 @@ export default {
       this.items.find(i =>
         Object.prototype.hasOwnProperty.call(i, "active")
       ).text = this.title;
-      this.debouncedSavePage();
+      this.debouncedSavePage(this.page,this.title,this.notesIn,this.updatePage);
     },
-    debouncedSavePage: debounce(function() {
+    savePage() {
       // const page = {
       //   _id: this.$route.params.id,
       //   title: title,
@@ -316,7 +331,7 @@ export default {
       page.title = this.title;
       page.notesIn = this.notesIn;
       this.updatePage(page);
-    }, 500)
+    },
   },
   computed: {
     dragOptions() {

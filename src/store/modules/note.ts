@@ -245,8 +245,6 @@ const actions: ActionTree<PageState, RootState> = {
         //  { withCredentials: true }
       )
       .then(resp => {
-        // const page = resp.data.page;
-        // console.log(page,resp.data);
         context.commit("deletePage", id);
       })
       .catch(err => {
@@ -272,7 +270,6 @@ const actions: ActionTree<PageState, RootState> = {
         // { withCredentials: true }
       )
       .then(resp => {
-        // console.log(resp);
         context.commit("updatePage", page);
       })
       .catch(err => {
@@ -324,7 +321,6 @@ const actions: ActionTree<PageState, RootState> = {
       )
       .then(resp => {
         const page = resp.data.page;
-        // console.log(page,resp.data);
         context.commit("addPage", page);
       })
       .catch(err => {

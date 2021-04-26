@@ -181,10 +181,10 @@ export default {
       this.notesIn.forEach(ele => {
         ele.checked = false;
       });
-      console.log(
-        this.$refs.cards.find(i => i.$props.todo.id === this.currentIdx)
-          .todoInput.innerHTML
-      );
+      // console.log(
+      //   this.$refs.cards.find(i => i.$props.todo.id === this.currentIdx)
+      //     .todoInput.innerHTML
+      // );
     },
     toggleinputFocus(value) {
       this.istodoInputfocused = value;
