@@ -7,13 +7,14 @@
       v-if="
         this.$route.name === 'PageNotFound' ||
           this.$route.name === 'InternalServerError' ||
-          this.$route.name === 'RedirectPage'
+          this.$route.name === 'RedirectPage' ||
+          this.$route.name=== 'Page'
       "
       align-h="end"
       style="margin-right:40px;"
       class="mt-4"
     >
-      <b-button variant="outline-info" href="/"
+      <b-button variant="outline-info" to="/"
         ><b-icon icon="door-closed" /> Go Home</b-button
       >
     </b-row>
