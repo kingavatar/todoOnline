@@ -141,14 +141,12 @@ export default {
       ]
     };
   },
-  created(){
-    this.debouncedSavePage = debounce(this.savePage,90000);
-    this.fastdebouncedSavePage = debounce(this.savePage,300);
-     window.addEventListener('beforeunload', this.savePage);
-    
+  created() {
+    this.debouncedSavePage = debounce(this.savePage, 90000);
+    this.fastdebouncedSavePage = debounce(this.savePage, 300);
+    window.addEventListener("beforeunload", this.savePage);
   },
   async mounted() {
-
     await this.getPageSrv(this.$route.params.id);
     this.title = (" " + this.page.title).slice(1);
     const notesIn = [...this.page.notesIn];
@@ -187,11 +185,11 @@ export default {
       Object.prototype.hasOwnProperty.call(i, "active")
     ).text = this.title;
   },
-  beforeDestroy(){
+  beforeDestroy() {
     // this.savePage();
-    window.removeEventListener('beforeunload', this.savePage);
+    window.removeEventListener("beforeunload", this.savePage);
   },
-  beforeRouteLeave(to, from, next){
+  beforeRouteLeave(to, from, next) {
     this.savePage();
     next();
   },
@@ -245,7 +243,12 @@ export default {
     },
     toggleinputFocus(value) {
       this.istodoInputfocused = value;
-      this.debouncedSavePage(this.page,this.title,this.notesIn,this.updatePage);
+      this.debouncedSavePage(
+        this.page,
+        this.title,
+        this.notesIn,
+        this.updatePage
+      );
     },
     toggleEmojiPicker(id) {
       let sel, range;
@@ -319,7 +322,12 @@ export default {
       this.items.find(i =>
         Object.prototype.hasOwnProperty.call(i, "active")
       ).text = this.title;
-      this.debouncedSavePage(this.page,this.title,this.notesIn,this.updatePage);
+      this.debouncedSavePage(
+        this.page,
+        this.title,
+        this.notesIn,
+        this.updatePage
+      );
     },
     savePage() {
       // const page = {
@@ -331,7 +339,7 @@ export default {
       page.title = this.title;
       page.notesIn = this.notesIn;
       this.updatePage(page);
-    },
+    }
   },
   computed: {
     dragOptions() {

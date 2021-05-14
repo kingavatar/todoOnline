@@ -2,6 +2,7 @@ import { MutationTree, GetterTree, ActionTree } from "vuex";
 import { AuthState, RootState } from "@/types";
 import axios from "axios";
 import router from "../../router";
+import store from "..";
 
 const authState: AuthState = {
   status: "",
@@ -101,7 +102,7 @@ const actions: ActionTree<AuthState, RootState> = {
     // const token = "demo";
     // return commit("authSuccess", { token, user });
   },
-  async oauthLogin({ commit },token) {
+  async oauthLogin({ commit }, token) {
     return new Promise((resolve, reject) => {
       commit("authRequest");
       axios.defaults.headers.common["authorization"] = token;
@@ -199,6 +200,7 @@ const actions: ActionTree<AuthState, RootState> = {
       delete axios.defaults.headers.common["authorization"];
       axios({ url: "http://localhost:3000/api/auth/logout", method: "GET" })
         .then(resp => {
+          commit("note/resetPages",null, { root: true });
           commit("logout");
           localStorage.removeItem("token");
           resolve(resp);

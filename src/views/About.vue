@@ -8,7 +8,7 @@
         this.$route.name === 'PageNotFound' ||
           this.$route.name === 'InternalServerError' ||
           this.$route.name === 'RedirectPage' ||
-          this.$route.name=== 'Page'
+          this.$route.name === 'Page'
       "
       align-h="end"
       style="margin-right:40px;"

@@ -179,7 +179,7 @@ const noteGetters: GetterTree<PageState, RootState> = {
   },
   latestNote(state): Page {
     return state.pages.slice(-1)[0];
-  }
+  },
 };
 
 const mutations: MutationTree<PageState> = {
@@ -207,6 +207,21 @@ const mutations: MutationTree<PageState> = {
       1,
       page
     );
+  },
+  resetPages(state){
+    state.pages = state.pages.filter(i => i._id ==="fb658d57-4653-4876-89b3-80ff9f60e3d6");
+  },
+  cleanPages(state,ids){
+    ids.push("fb658d57-4653-4876-89b3-80ff9f60e3d6");
+    const unnecessaryPageIdx:number[]=[]
+    state.pages.forEach((element:Page,index:number)=>{
+      if(!ids.include(element._id)){
+        unnecessaryPageIdx.push(index);
+      }
+    })
+    unnecessaryPageIdx.forEach((element:number)=>{
+        state.pages.splice(element,1);
+    })
   }
 };
 
@@ -294,10 +309,12 @@ const actions: ActionTree<PageState, RootState> = {
       )
       .then(resp => {
         const pages = resp.data.pages;
-
+        const ids:string[]=[];
         pages.forEach((element: Page) => {
           context.commit("addPage", element);
+          ids.push(element._id);
         });
+        context.commit("cleanPages",ids);
       })
       .catch(err => {
         if (err.response != undefined) {
@@ -359,6 +376,9 @@ const actions: ActionTree<PageState, RootState> = {
           }
         }
       });
+  },
+  resetPages(context){
+    context.commit("resetPages");
   }
 };
 

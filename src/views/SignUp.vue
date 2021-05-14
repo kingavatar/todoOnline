@@ -89,9 +89,7 @@
               <b-button variant="outline-danger" href="/api/auth/google"
                 ><b-icon icon="google"
               /></b-button>
-              <b-button
-                variant="outline-primary"
-                href="/api/auth/facebook"
+              <b-button variant="outline-primary" href="/api/auth/facebook"
                 ><b-icon icon="facebook"
               /></b-button>
               <b-button variant="outline-dark" href="/api/auth/github"

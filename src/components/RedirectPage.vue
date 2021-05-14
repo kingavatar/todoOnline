@@ -28,9 +28,12 @@ export default {
   name: "RedirectPage",
   mounted() {
     this.$store
-        .dispatch("auth/oauthLogin", this.$route.query.token)
-        .then(() => this.$router.replace("/"))
-        .catch(err => {console.log(err); this.$router.replace("/login")});
+      .dispatch("auth/oauthLogin", this.$route.query.token)
+      .then(() => this.$router.replace("/"))
+      .catch(err => {
+        console.log(err);
+        this.$router.replace("/login");
+      });
   },
   methods: {
     // ...mapActions({ oauthLogin: "auth/oauthLogin" })
