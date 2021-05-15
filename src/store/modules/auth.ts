@@ -15,7 +15,7 @@ const authGetters: GetterTree<AuthState, RootState> = {
   isLoggedIn: state => !!state.token,
   // return new Promise((resolve, reject) => {
   // delete axios.defaults.headers.common['authorization']
-  // axios({ url: "http://localhost:3000/auth/authStatus", method: "GET" })
+  // axios({ url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/auth/authStatus", method: "GET" })
   //   .then(resp => {
   //     return resp.data;
   //     // resolve(resp);
@@ -67,9 +67,9 @@ const actions: ActionTree<AuthState, RootState> = {
   async login({ commit }, user) {
     return new Promise((resolve, reject) => {
       commit("authRequest");
-      // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "http://localhost:8080/*";
+      // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "http://process.env.VUE_APP_URL:8080/*";
       axios({
-        url: "http://localhost:3000/api/auth/signin",
+        url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/auth/signin",
         data: user,
         method: "POST"
         // withCredentials: true
@@ -107,7 +107,7 @@ const actions: ActionTree<AuthState, RootState> = {
       commit("authRequest");
       axios.defaults.headers.common["authorization"] = token;
       axios({
-        url: "http://localhost:3000/api/auth/social",
+        url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/auth/social",
         data: token,
         method: "GET"
         // withCredentials: true
@@ -142,9 +142,9 @@ const actions: ActionTree<AuthState, RootState> = {
   signup({ commit }, user) {
     return new Promise((resolve, reject) => {
       commit("authRequest");
-      // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "http://localhost:8080/";
+      // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "http://process.env.VUE_APP_URL:8080/";
       axios({
-        url: "http://localhost:3000/api/auth/signup",
+        url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/auth/signup",
         data: user,
         method: "POST"
       })
@@ -179,7 +179,7 @@ const actions: ActionTree<AuthState, RootState> = {
   // register({ commit }, user) {
   //   return new Promise((resolve, reject) => {
   //     commit('auth_request')
-  //     axios({ url: 'http://localhost:3000/register', data: user, method: 'POST' })
+  //     axios({ url: 'http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/register', data: user, method: 'POST' })
   //       .then(resp => {
   //         const token = resp.data.token
   //         const user = resp.data.user
@@ -198,7 +198,7 @@ const actions: ActionTree<AuthState, RootState> = {
   logout({ commit }) {
     return new Promise((resolve, reject) => {
       delete axios.defaults.headers.common["authorization"];
-      axios({ url: "http://localhost:3000/api/auth/logout", method: "GET" })
+      axios({ url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/auth/logout", method: "GET" })
         .then(resp => {
           commit("note/resetPages",null, { root: true });
           commit("logout");

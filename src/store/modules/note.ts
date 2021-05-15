@@ -232,7 +232,7 @@ const actions: ActionTree<PageState, RootState> = {
 
     axios
       .post(
-        "http://localhost:3000/api/page/add"
+        "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/page/add"
         // { withCredentials: true }
       )
       .then(resp => {
@@ -256,7 +256,7 @@ const actions: ActionTree<PageState, RootState> = {
 
     axios
       .delete(
-        "http://localhost:3000/api/page/" + id
+        "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/page/" + id
         //  { withCredentials: true }
       )
       .then(resp => {
@@ -280,7 +280,7 @@ const actions: ActionTree<PageState, RootState> = {
     // axios.defaults.withCredentials = true;
     axios
       .put(
-        "http://localhost:3000/api/page/" + page._id,
+        "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/page/" + page._id,
         page
         // { withCredentials: true }
       )
@@ -304,7 +304,7 @@ const actions: ActionTree<PageState, RootState> = {
 
     axios
       .get(
-        "http://localhost:3000/api/page"
+        "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/page"
         // { withCredentials: true }
       )
       .then(resp => {
@@ -333,7 +333,7 @@ const actions: ActionTree<PageState, RootState> = {
 
     axios
       .get(
-        "http://localhost:3000/api/page/" + id
+        "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/page/" + id
         //  { withCredentials: true }
       )
       .then(resp => {
@@ -358,7 +358,7 @@ const actions: ActionTree<PageState, RootState> = {
 
     axios
       .post(
-        "http://localhost:3000/api/page/copy/" + id
+        "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/page/copy/" + id
         // { withCredentials: true }
       )
       .then(resp => {

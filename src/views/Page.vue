@@ -158,7 +158,7 @@ export default {
     //     ] = this.$store.state.auth.token;
     //     axios
     //       .get(
-    //         "http://localhost:3000/api/note/page/" + this.$route.params.id
+    //         "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/note/page/" + this.$route.params.id
     //         //  { withCredentials: true }
     //       )
     //       .then(resp => {
