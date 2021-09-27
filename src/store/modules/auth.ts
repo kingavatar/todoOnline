@@ -69,7 +69,7 @@ const actions: ActionTree<AuthState, RootState> = {
       commit("authRequest");
       // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "http://process.env.VUE_APP_URL:8080/*";
       axios({
-        url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/auth/signin",
+        url: `http://${process.env.VUE_APP_URL}:${process.env.VUE_APP_PORT}/api/auth/signin`,
         data: user,
         method: "POST"
         // withCredentials: true
@@ -107,7 +107,7 @@ const actions: ActionTree<AuthState, RootState> = {
       commit("authRequest");
       axios.defaults.headers.common["authorization"] = token;
       axios({
-        url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/auth/social",
+        url: `http://${process.env.VUE_APP_URL}:${process.env.VUE_APP_PORT}/api/auth/social`,
         data: token,
         method: "GET"
         // withCredentials: true
@@ -144,7 +144,7 @@ const actions: ActionTree<AuthState, RootState> = {
       commit("authRequest");
       // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "http://process.env.VUE_APP_URL:8080/";
       axios({
-        url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/auth/signup",
+        url: `http://${process.env.VUE_APP_URL}:${process.env.VUE_APP_PORT}/api/auth/signup`,
         data: user,
         method: "POST"
       })
@@ -198,7 +198,7 @@ const actions: ActionTree<AuthState, RootState> = {
   logout({ commit }) {
     return new Promise((resolve, reject) => {
       delete axios.defaults.headers.common["authorization"];
-      axios({ url: "http://process.env.VUE_APP_URL:process.env.VUE_APP_PORT/api/auth/logout", method: "GET" })
+      axios({ url: `http://${process.env.VUE_APP_URL}:${process.env.VUE_APP_PORT}/api/auth/logout`, method: "GET" })
         .then(resp => {
           commit("note/resetPages",null, { root: true });
           commit("logout");
